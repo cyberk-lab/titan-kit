@@ -1,12 +1,12 @@
 {
-  "name": "@interchain-kit/react",
+  "name": "@titan-kit/react",
   "version": "0.3.26",
-  "author": "Hyperweb <developers@hyperweb.io>",
-  "description": "interchain-kit wallet connector react package",
+  "author": "BangBu <68235687+bangbu10820@users.noreply.github.com>",
+  "description": "titan-kit wallet connector react package",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
-  "homepage": "https://github.com/interchain-kit/react",
+  "homepage": "https://github.com/titan-kit/react",
   "license": "SEE LICENSE IN LICENSE",
   "publishConfig": {
     "access": "public",
@@ -14,10 +14,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/interchain-kit/react"
+    "url": "https://github.com/titan-kit/react"
   },
   "bugs": {
-    "url": "https://github.com/interchain-kit/react/issues"
+    "url": "https://github.com/titan-kit/react/issues"
   },
   "scripts": {
     "copy": "copyfiles -f ../../LICENSE README.md package.json dist",

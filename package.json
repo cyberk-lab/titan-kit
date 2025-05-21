@@ -13,6 +13,9 @@
     "wallets/*",
     "examples/*"
   ],
+  "resolutions": {
+    "crypto": "npm:crypto-es@^2.1.0"
+  },
   "scripts": {
     "clean": "lerna run clean",
     "build": "lerna run build --stream --ignore='@interchain-kit/vue-examples' --ignore='@interchain-kit/react-examples' --ignore='@interchain-kit/vanilla-examples'",

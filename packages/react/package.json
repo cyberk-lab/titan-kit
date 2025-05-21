@@ -39,7 +39,7 @@
     "@interchainjs/cosmos-types": "1.11.9",
     "@interchainjs/types": "1.11.9",
     "@react-icons/all-files": "^4.1.0",
-    "@titan-kit/core": "^0.3.26",
+    "@titan-kit/core": "^0.0.3-alpha.2",
     "@walletconnect/types": "^2.17.3",
     "interchainjs": "1.11.9",
     "zustand": "^5.0.3"

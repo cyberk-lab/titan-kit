@@ -1,6 +1,6 @@
 {
   "name": "@titan-kit/core",
-  "version": "0.0.3-alpha.4",
+  "version": "0.0.3-alpha.5",
   "author": "BangBu <68235687+bangbu10820@users.noreply.github.com>",
   "description": "titan-kit wallet connector core package",
   "main": "index.js",

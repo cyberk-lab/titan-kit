@@ -34,7 +34,7 @@
   "keywords": [],
   "dependencies": {
     "@chain-registry/v2-types": "^0.53.40",
-    "@interchain-kit/core": "^0.3.26",
+    "@titan-kit/core": "^0.3.26",
     "@interchain-ui/react": "1.26.1",
     "@interchainjs/cosmos": "1.11.9",
     "@interchainjs/cosmos-types": "1.11.9",

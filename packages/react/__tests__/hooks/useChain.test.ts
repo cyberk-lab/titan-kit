@@ -5,7 +5,7 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useChain } from '../../src/hooks/useChain';
 import { useWalletManager } from '../../src/hooks/useWalletManager';
-import { ChainNameNotExist, ChainNotExist, WalletState } from '@interchain-kit/core';
+import { ChainNameNotExist, ChainNotExist, WalletState } from '@titan-kit/core';
 import { ChainWalletState, InterchainStore } from '../../src/store';
 import { MockWallet } from '../helpers/mock-wallet';
 import { StatefulWallet } from '../../src/store/stateful-wallet';

@@ -1,6 +1,6 @@
 {
   "name": "titan-kit",
-  "version": "0.0.2",
+  "version": "0.0.3-alpha.2",
   "author": "BangBu <68235687+bangbu10820@users.noreply.github.com>",
   "description": "Universal wallet connector for the interchain",
   "main": "index.js",

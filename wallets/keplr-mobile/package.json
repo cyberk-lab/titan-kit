@@ -1,6 +1,6 @@
 {
   "name": "@titan-kit/keplr-mobile",
-  "version": "0.0.2",
+  "version": "0.0.3-alpha.2",
   "author": "BangBu <68235687+bangbu10820@users.noreply.github.com>",
   "description": "titan-kit wallet connector",
   "main": "index.js",

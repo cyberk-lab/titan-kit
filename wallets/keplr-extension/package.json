@@ -1,6 +1,6 @@
 {
   "name": "@titan-kit/keplr-extension",
-  "version": "0.0.2",
+  "version": "0.0.3-alpha.2",
   "author": "BangBu <68235687+bangbu10820@users.noreply.github.com>",
   "description": "titan-kit wallet connector",
   "main": "index.js",
@@ -31,8 +31,8 @@
   },
   "keywords": [],
   "dependencies": {
-    "@titan-kit/core": "^0.3.26",
-    "@keplr-wallet/provider-extension": "^0.12.102"
+    "@keplr-wallet/provider-extension": "^0.12.102",
+    "@titan-kit/core": "^0.3.26"
   },
   "gitHead": "35337e4470a0594ba644d31be8e24c8e295296f6"
 }

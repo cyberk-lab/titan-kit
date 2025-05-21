@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.0.3-alpha.2 (2025-05-21)
+
+### Bug Fixes
+
+- **@interchain-kit/react:** fix warning when test ([dfc9d0e](https://github.com/titan-kit/react/commit/dfc9d0e6f3649942860b4664f5a069218e1e3933))
+
 ## [0.3.26](https://github.com/interchain-kit/react/compare/@interchain-kit/react@0.3.25...@interchain-kit/react@0.3.26) (2025-05-19)
 
 **Note:** Version bump only for package @interchain-kit/react

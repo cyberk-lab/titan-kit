@@ -1,12 +1,12 @@
 {
-  "name": "@interchain-kit/keplr-extension",
+  "name": "@titan-kit/keplr-extension",
   "version": "0.3.26",
-  "author": "Hyperweb <developers@hyperweb.io>",
-  "description": "interchain-kit wallet connector",
+  "author": "BangBu <68235687+bangbu10820@users.noreply.github.com>",
+  "description": "titan-kit wallet connector",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
-  "homepage": "https://github.com/interchain-kit/interchain-kit",
+  "homepage": "https://github.com/titan-kit/keplr-extension",
   "license": "SEE LICENSE IN LICENSE",
   "publishConfig": {
     "access": "public",
@@ -14,10 +14,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/interchain-kit/interchain-kit"
+    "url": "https://github.com/titan-kit/keplr-extension"
   },
   "bugs": {
-    "url": "https://github.com/interchain-kit/interchain-kit/issues"
+    "url": "https://github.com/titan-kit/keplr-extension/issues"
   },
   "scripts": {
     "copy": "copyfiles -f ../../LICENSE README.md package.json dist",

@@ -1,12 +1,12 @@
 {
-  "name": "@interchain-kit/mock-wallet",
+  "name": "@titan-kit/mock-wallet",
   "version": "0.3.26",
-  "author": "Cosmology <developers@hyperweb.io>",
-  "description": "interchain-kit wallet connector",
+  "author": "BangBu <68235687+bangbu10820@users.noreply.github.com>",
+  "description": "titan-kit wallet connector",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
-  "homepage": "https://github.com/@interchain-kit/mock-wallet",
+  "homepage": "https://github.com/titan-kit/mock-wallet",
   "license": "SEE LICENSE IN LICENSE",
   "publishConfig": {
     "access": "public",
@@ -14,10 +14,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/@interchain-kit/mock-wallet"
+    "url": "https://github.com/titan-kit/mock-wallet"
   },
   "bugs": {
-    "url": "https://github.com/@interchain-kit/mock-wallet/issues"
+    "url": "https://github.com/titan-kit/mock-wallet/issues"
   },
   "scripts": {
     "copy": "copyfiles -f ../../LICENSE README.md package.json dist",

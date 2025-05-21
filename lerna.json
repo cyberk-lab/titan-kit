@@ -13,7 +13,7 @@
       "access": "restricted"
     },
     "publish": {
-      "allowBranch": "main",
+      "allowBranch": "first-publish-2",
       "message": "chore(release): publish"
     }
   },

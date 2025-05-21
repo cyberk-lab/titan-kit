@@ -2,15 +2,9 @@
   "lerna": "6",
   "conventionalCommits": true,
   "npmClient": "yarn",
-  "npmClientArgs": [
-    "--no-lockfile"
-  ],
-  "packages": [
-    "packages/*",
-    "wallets/*",
-    "examples/*"
-  ],
-  "version": "independent",
+  "npmClientArgs": ["--no-lockfile"],
+  "packages": ["packages/*", "wallets/*", "examples/*"],
+  "version": "0.0.3-alpha.1",
   "registry": "https://registry.npmjs.org",
   "command": {
     "create": {

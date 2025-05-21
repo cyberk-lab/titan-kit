@@ -1,6 +1,6 @@
 {
   "name": "@titan-kit/react",
-  "version": "0.3.26",
+  "version": "0.0.2",
   "author": "BangBu <68235687+bangbu10820@users.noreply.github.com>",
   "description": "titan-kit wallet connector react package",
   "main": "index.js",

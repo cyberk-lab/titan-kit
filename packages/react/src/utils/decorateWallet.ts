@@ -1,6 +1,9 @@
-import { BaseWallet } from "@interchain-kit/core";
+import { BaseWallet } from "@titan-kit/core";
 
-export const decorateWallet = <T extends BaseWallet>(wallet: T, decorateMethods: Partial<T>): T => {
+export const decorateWallet = <T extends BaseWallet>(
+  wallet: T,
+  decorateMethods: Partial<T>
+): T => {
   return new Proxy(wallet, {
     get(target, prop, receiver) {
       if (prop in decorateMethods) {
@@ -20,4 +23,4 @@ export const decorateWallet = <T extends BaseWallet>(wallet: T, decorateMethods:
       return Reflect.set(target, prop, value, receiver);
     },
   });
-}
+};

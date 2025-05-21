@@ -5,7 +5,7 @@ import {
   SignerOptions,
   EndpointOptions,
   WalletManager,
-} from "@interchain-kit/core";
+} from "@titan-kit/core";
 import { AssetList, Chain } from "@chain-registry/v2-types";
 import { ModalRenderer, WalletModalProps } from "./modal";
 import { createInterchainStore, InterchainStore } from "./store";

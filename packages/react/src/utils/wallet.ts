@@ -1,4 +1,4 @@
-import { BaseWallet, isInstanceOf, WCWallet } from "@interchain-kit/core"
+import { BaseWallet, isInstanceOf, WCWallet } from "@titan-kit/core";
 
 export const getWalletInfo = (wallet: BaseWallet) => {
   return {
@@ -6,13 +6,12 @@ export const getWalletInfo = (wallet: BaseWallet) => {
     prettyName: wallet?.info?.prettyName,
     logo: wallet?.info?.logo as string,
     mobileDisabled: true,
-  }
-}
-
+  };
+};
 
 export const transferToWalletUISchema = (w: BaseWallet) => {
   if (w.info.mode === "wallet-connect") {
-    const wc = w as unknown as WCWallet
+    const wc = w as unknown as WCWallet;
     if (wc.session) {
       return {
         name: wc.session?.peer.metadata?.name,
@@ -33,4 +32,4 @@ export const transferToWalletUISchema = (w: BaseWallet) => {
     shape: "list" as "list",
     originalWallet: w,
   };
-}
+};

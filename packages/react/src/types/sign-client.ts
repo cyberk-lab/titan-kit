@@ -1,3 +1,5 @@
-import { WalletManager } from "@interchain-kit/core";
+import { WalletManager } from "@titan-kit/core";
 
-export type SigningClient = Awaited<ReturnType<WalletManager['getSigningClient']>>
+export type SigningClient = Awaited<
+  ReturnType<WalletManager["getSigningClient"]>
+>;

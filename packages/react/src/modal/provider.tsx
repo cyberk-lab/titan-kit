@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
-import { WalletState } from "@interchain-kit/core";
+import { WalletState } from "@titan-kit/core";
 import { useChainWallet, useWalletManager } from "../hooks";
 import { Wallet as InterchainUIWalletType } from "@interchain-ui/react";
 import { transferToWalletUISchema } from "../utils";

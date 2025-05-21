@@ -1,4 +1,4 @@
-# @interchain-kit/react
+# @titan-kit/react
 
 <p align="center" width="100%">
     <img height="90" src="https://user-images.githubusercontent.com/545047/190171432-5526db8f-9952-45ce-a745-bea4302f912b.svg" />
@@ -22,19 +22,19 @@
 ## Install
 Using npm:
 ```sh
-npm install @interchain-kit/react
+npm install @titan-kit/react
 ```
 Using yarn:
 ```sh
-yarn add @interchain-kit/react
+yarn add @titan-kit/react
 ```
 
 ## Usage
 ### Setup
 #### import chain registry info that you need
 ```js
-import { ChainProvider, useChain } from "@interchain-kit/react";
-import { keplrWallet } from "@interchain-kit/keplr-extension";
+import { ChainProvider, useChain } from "@titan-kit/react";
+import { keplrWallet } from "@titan-kit/keplr-extension";
 import { ThemeProvider } from "@interchain-ui/react";
 import "@interchain-ui/react/styles";
 
@@ -69,8 +69,8 @@ export default App;
 
 #### or import all chain registry
 ```js
-import { ChainProvider, useChain } from "@interchain-kit/react";
-import { keplrWallet } from "@interchain-kit/keplr-extension";
+import { ChainProvider, useChain } from "@titan-kit/react";
+import { keplrWallet } from "@titan-kit/keplr-extension";
 import { ThemeProvider } from "@interchain-ui/react";
 import "@interchain-ui/react/styles";
 import { chains, assetLists } from '@chain-registry/v2/mainnet'
@@ -118,8 +118,8 @@ console.log(address) // address for cosmoshub in keplr-extension wallet
 ```js
 import { chain as junoChain, assetList as junoAssetList } from "@chain-registry/v2/mainnet/juno";
 import { chain as stargazeChain,assetList as stargazeAssetList } from "@chain-registry/v2/mainnet/stargaze";
-import { keplrWallet } from "@interchain-kit/keplr-extension";
-import { leapWallet } from "@interchain-kit/leap-extension";
+import { keplrWallet } from "@titan-kit/keplr-extension";
+import { leapWallet } from "@titan-kit/leap-extension";
 
 const Show = () => {
   const juno = useChainWallet('juno', 'keplr-extension')

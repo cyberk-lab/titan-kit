@@ -15,7 +15,7 @@ import {
   WalletListHeader,
 } from "./views";
 import { ReactElement, useMemo, useState } from "react";
-import { BaseWallet, DownloadInfo, WalletState } from "@interchain-kit/core";
+import { BaseWallet, DownloadInfo, WalletState } from "@titan-kit/core";
 import {
   ConnectModal,
   Wallet as InterchainUIWalletType,

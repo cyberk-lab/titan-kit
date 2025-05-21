@@ -1,5 +1,5 @@
 import { ConnectModalHead, ConnectModalQRCode } from "@interchain-ui/react";
-import { BaseWallet } from "@interchain-kit/core";
+import { BaseWallet } from "@titan-kit/core";
 
 export const QRCodeHeader = ({
   wallet,

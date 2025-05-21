@@ -9,7 +9,7 @@ import {
   WalletModal,
   WalletModalProps,
 } from "../../src/modal/modal";
-import { BaseWallet } from "@interchain-kit/core";
+import { BaseWallet } from "@titan-kit/core";
 import "@testing-library/jest-dom";
 import { transferToWalletUISchema } from "../../src/utils";
 import { MockStatefulWallet, MockWallet } from "../helpers/mock-wallet";

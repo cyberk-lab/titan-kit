@@ -1,6 +1,6 @@
 {
   "name": "@titan-kit/keplr-mobile",
-  "version": "0.0.3-alpha.6",
+  "version": "0.0.3-alpha.7",
   "author": "BangBu <68235687+bangbu10820@users.noreply.github.com>",
   "description": "titan-kit wallet connector",
   "main": "index.js",
@@ -32,7 +32,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@titan-kit/core": "^0.0.3-alpha.6"
+    "@titan-kit/core": "^0.0.3-alpha.7"
   },
   "gitHead": "c7fb205222a8fe8a9266badf2f6e2afd0a1c9f33"
 }

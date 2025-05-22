@@ -6,7 +6,7 @@ const UseChainDoc = () => {
 			<Markdown>{`
 # Documentation
 ## 1.prerequisite
-required provider: ChainProvider from @interchain-kit/react
+required provider: ChainProvider from @titan-kit/react
 \`\`\`
 <ChainProvider
 	chains={_chains}

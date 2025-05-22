@@ -1,4 +1,4 @@
-import { useChain, useWalletManager } from "@interchain-kit/react";
+import { useChain, useWalletManager } from "@titan-kit/react";
 import { useEffect } from "react";
 
 const TestDisconnect = () => {

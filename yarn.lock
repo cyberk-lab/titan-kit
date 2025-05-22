@@ -1778,28 +1778,6 @@
     interchainjs "1.11.9"
     long "^5.2.3"
 
-"@interchain-kit/core@file:packages/core":
-  version "0.0.3-alpha.7"
-  dependencies:
-    "@chain-registry/v2" "^1.71.71"
-    "@chain-registry/v2-keplr" "^0.0.72"
-    "@chain-registry/v2-types" "^0.53.40"
-    "@interchainjs/cosmos" "1.9.15"
-    "@interchainjs/cosmos-types" "1.9.15"
-    "@interchainjs/types" "1.9.15"
-    "@ledgerhq/hw-app-cosmos" "^6.30.4"
-    "@ledgerhq/hw-transport" "^6.31.4"
-    "@ledgerhq/hw-transport-webhid" "^6.30.0"
-    "@ledgerhq/hw-transport-webusb" "^6.29.4"
-    "@walletconnect/sign-client" "^2.19.1"
-    "@walletconnect/types" "^2.19.1"
-    "@walletconnect/universal-provider" "^2.19.1"
-    base64-js "^1.5.1"
-    bowser "^2.11.0"
-    buffer "^6.0.3"
-    interchainjs "1.11.9"
-    long "^5.2.3"
-
 "@interchain-kit/keplr-extension@^0.3.26":
   version "0.3.28"
   resolved "https://registry.yarnpkg.com/@interchain-kit/keplr-extension/-/keplr-extension-0.3.28.tgz#3cc2fbed9733bae429e705862df4995ffa73022b"
@@ -1807,20 +1785,6 @@
   dependencies:
     "@interchain-kit/core" "^0.3.28"
     "@keplr-wallet/provider-extension" "^0.12.102"
-
-"@interchain-kit/react@file:packages/react":
-  version "0.0.3-alpha.7"
-  dependencies:
-    "@chain-registry/v2-types" "^0.53.40"
-    "@interchain-ui/react" "1.26.1"
-    "@interchainjs/cosmos" "1.9.15"
-    "@interchainjs/cosmos-types" "1.9.15"
-    "@interchainjs/types" "1.9.15"
-    "@react-icons/all-files" "^4.1.0"
-    "@titan-kit/core" "^0.0.3-alpha.7"
-    "@walletconnect/types" "^2.17.3"
-    interchainjs "1.11.9"
-    zustand "^5.0.3"
 
 "@interchain-ui/react@1.26.1":
   version "1.26.1"
@@ -4629,6 +4593,42 @@
     "@babel/runtime" "^7.12.5"
     "@testing-library/dom" "^10.0.0"
     "@types/react-dom" "^18.0.0"
+
+"@titan-kit/core@file:packages/core":
+  version "0.0.3-alpha.7"
+  dependencies:
+    "@chain-registry/v2" "^1.71.71"
+    "@chain-registry/v2-keplr" "^0.0.72"
+    "@chain-registry/v2-types" "^0.53.40"
+    "@interchainjs/cosmos" "1.9.15"
+    "@interchainjs/cosmos-types" "1.9.15"
+    "@interchainjs/types" "1.9.15"
+    "@ledgerhq/hw-app-cosmos" "^6.30.4"
+    "@ledgerhq/hw-transport" "^6.31.4"
+    "@ledgerhq/hw-transport-webhid" "^6.30.0"
+    "@ledgerhq/hw-transport-webusb" "^6.29.4"
+    "@walletconnect/sign-client" "^2.19.1"
+    "@walletconnect/types" "^2.19.1"
+    "@walletconnect/universal-provider" "^2.19.1"
+    base64-js "^1.5.1"
+    bowser "^2.11.0"
+    buffer "^6.0.3"
+    interchainjs "1.11.9"
+    long "^5.2.3"
+
+"@titan-kit/react@file:packages/react":
+  version "0.0.3-alpha.7"
+  dependencies:
+    "@chain-registry/v2-types" "^0.53.40"
+    "@interchain-ui/react" "1.26.1"
+    "@interchainjs/cosmos" "1.9.15"
+    "@interchainjs/cosmos-types" "1.9.15"
+    "@interchainjs/types" "1.9.15"
+    "@react-icons/all-files" "^4.1.0"
+    "@titan-kit/core" "^0.0.3-alpha.7"
+    "@walletconnect/types" "^2.17.3"
+    interchainjs "1.11.9"
+    zustand "^5.0.3"
 
 "@tootallnate/once@2":
   version "2.0.0"

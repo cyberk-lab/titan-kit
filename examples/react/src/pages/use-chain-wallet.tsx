@@ -1,4 +1,4 @@
-import { useChainWallet, useWalletManager } from "@interchain-kit/react";
+import { useChainWallet, useWalletManager } from "@titan-kit/react";
 
 const Tr = ({
   chainName,

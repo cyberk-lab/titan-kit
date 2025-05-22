@@ -3,8 +3,8 @@ import {
   ExtensionWallet,
   isInstanceOf,
   MultiChainWallet,
-} from "@interchain-kit/core";
-import { useChain } from "@interchain-kit/react";
+} from "@titan-kit/core";
+import { useChain } from "@titan-kit/react";
 import { useState } from "react";
 
 const CosmosWalletPage: React.FC = () => {

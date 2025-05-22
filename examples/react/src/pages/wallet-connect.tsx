@@ -1,4 +1,4 @@
-import { useChain, useChainWallet } from "@interchain-kit/react";
+import { useChain, useChainWallet } from "@titan-kit/react";
 
 const WalletConnect = () => {
   const { openView, address, disconnect, chain, rpcEndpoint, wallet } =

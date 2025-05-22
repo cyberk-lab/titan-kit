@@ -5,13 +5,13 @@ import {
   isMobile,
   MultiChainWallet,
   WCWallet,
-} from "@interchain-kit/core";
+} from "@titan-kit/core";
 import {
   SigningClient,
   useChainWallet,
   useWalletManager,
   useWalletModal,
-} from "@interchain-kit/react";
+} from "@titan-kit/react";
 import { useEffect, useRef, useState } from "react";
 import { makeKeplrChainInfo } from "../utils";
 import { Chain, Asset, AssetList } from "@chain-registry/v2-types";
@@ -22,7 +22,7 @@ import QRCode from "react-qr-code";
 import { send } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
 import { RpcClient } from "@interchainjs/cosmos/query/rpc";
 import { ethers } from "ethers";
-import { StatefulWallet } from "@interchain-kit/react/store/stateful-wallet";
+import { StatefulWallet } from "@titan-kit/react/store/stateful-wallet";
 
 type BalanceProps = {
   address: string;

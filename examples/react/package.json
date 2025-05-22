@@ -1,7 +1,7 @@
 {
-  "name": "@interchain-kit/react-examples",
-  "author": "Hyperweb <developers@hyperweb.io>",
-  "description": "interchain-kit wallet connector core package",
+  "name": "@titan-kit/react-examples",
+  "author": "BangBang <>",
+  "description": "titan-kit wallet connector core package",
   "version": "0.3.26",
   "type": "module",
   "private": true,
@@ -21,15 +21,20 @@
       "autoprefixer": {}
     }
   },
+  "resolutions": {
+    "@titan-kit/core": "file:../../packages/core",
+    "@titan-kit/react": "file:../../packages/react",
+    "@titan-kit/keplr-extension": "file:../../packages/keplr-extension"
+  },
   "dependencies": {
     "@chain-registry/v2": "^1.71.16",
     "@chain-registry/v2-types": "^0.53.0",
     "@cosmjs/crypto": "^0.32.4",
     "@cosmjs/proto-signing": "^0.32.4",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
-    "@interchain-kit/core": "file:../../packages/core",
-    "@interchain-kit/keplr-extension": "^0.3.26",
-    "@interchain-kit/react": "file:../../packages/react",
+    "@titan-kit/core": "file:../../packages/core",
+    "@titan-kit/keplr-extension": "file:../../packages/keplr-extension",
+    "@titan-kit/react": "file:../../packages/react",
     "@interchain-ui/react": "^1.23.31",
     "@tanstack/react-query": "4",
     "autoprefixer": "^10.4.20",

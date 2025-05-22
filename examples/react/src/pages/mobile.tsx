@@ -1,6 +1,6 @@
-import { useWalletManager } from "@interchain-kit/react";
+import { useWalletManager } from "@titan-kit/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { WCWallet } from "@interchain-kit/core";
+import { WCWallet } from "@titan-kit/core";
 
 const Mobile = () => {
   const instance = useRef<WCWallet>(null);

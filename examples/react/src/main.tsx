@@ -5,22 +5,18 @@ import "./index.css";
 import "@interchain-ui/react/styles";
 import { BrowserRouter } from "react-router-dom";
 
-import { ChainProvider, InterchainWalletModal } from "@interchain-kit/react";
+import { ChainProvider, InterchainWalletModal } from "@titan-kit/react";
 
 import { assetLists, chains } from "@chain-registry/v2";
-import {
-  BaseWallet,
-  ExtensionWallet,
-  isInstanceOf,
-} from "@interchain-kit/core";
-import { keplrWallet } from "@interchain-kit/keplr-extension";
+import { BaseWallet, ExtensionWallet, isInstanceOf } from "@titan-kit/core";
+import { keplrWallet } from "@titan-kit/keplr-extension";
 
-// import { MockWallet } from "@interchain-kit/mock-wallet";
+// import { MockWallet } from "@titan-kit/mock-wallet";
 import { ThemeProvider } from "@interchain-ui/react";
 
 const chainNames: string[] = [
   // "injectivetestnet",
-  "osmosistestnet",
+  // "osmosistestnet",
   // "osmosis",
   // "juno",
   // "cosmoshub",
@@ -29,6 +25,7 @@ const chainNames: string[] = [
   // "seitestnet2",
   // "ethereum",
   // "cosmoshubtestnet",
+  "titantestnet",
 ];
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];

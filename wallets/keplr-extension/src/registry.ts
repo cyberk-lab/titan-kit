@@ -1,5 +1,5 @@
 
-import { Wallet } from '@interchain-kit/core';
+import { Wallet } from '@titan-kit/core';
 import { ICON } from './constant';
 
 export const keplrExtensionInfo: Wallet = {

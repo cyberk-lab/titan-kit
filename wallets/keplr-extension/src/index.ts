@@ -1,4 +1,4 @@
-import { CosmosWallet, EthereumWallet, ExtensionWallet, PlatformWallet, selectWalletByPlatform, SignOptions, WCMobileWebWallet } from "@interchain-kit/core";
+import { CosmosWallet, EthereumWallet, ExtensionWallet, PlatformWallet, selectWalletByPlatform, SignOptions, WCMobileWebWallet } from "@titan-kit/core";
 import { keplrExtensionInfo } from "./registry";
 
 export * from './registry'

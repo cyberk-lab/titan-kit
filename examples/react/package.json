@@ -24,7 +24,7 @@
   "resolutions": {
     "@titan-kit/core": "file:../../packages/core",
     "@titan-kit/react": "file:../../packages/react",
-    "@titan-kit/keplr-extension": "file:../../packages/keplr-extension"
+    "@titan-kit/keplr-extension": "file:../../wallets/keplr-extension"
   },
   "dependencies": {
     "@chain-registry/v2": "^1.71.16",
@@ -33,7 +33,7 @@
     "@cosmjs/proto-signing": "^0.32.4",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@titan-kit/core": "file:../../packages/core",
-    "@titan-kit/keplr-extension": "file:../../packages/keplr-extension",
+    "@titan-kit/keplr-extension": "file:../../wallets/keplr-extension",
     "@titan-kit/react": "file:../../packages/react",
     "@interchain-ui/react": "^1.23.31",
     "@tanstack/react-query": "4",
@@ -50,7 +50,8 @@
     "react-router-dom": "^6.26.1",
     "stream-browserify": "^3.0.0",
     "tailwindcss": "^3.4.13",
-    "vite-plugin-fs": "^1.1.0"
+    "vite-plugin-fs": "^1.1.0",
+    "crypto-browserify": "3.12.1"
   },
   "devDependencies": {
     "@starship-ci/cli": "^2.10.0",

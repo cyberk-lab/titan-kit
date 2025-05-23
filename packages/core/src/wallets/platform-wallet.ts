@@ -1,13 +1,13 @@
-import { AssetList, Chain } from "@chain-registry/v2-types";
-import { IGenericOfflineSigner } from "@interchainjs/types";
-import { WalletAccount, SignType, Wallet } from "../types";
-import { BaseWallet } from "./base-wallet";
-import { isMobile } from "../utils";
+import { AssetList, Chain } from '@chain-registry/v2-types';
+import { IGenericOfflineSigner } from '@titanlabjs/types';
 
-type PlatformWalletType = "mobile-web" | "web";
+import { SignType, WalletAccount } from '../types';
+import { isMobile } from '../utils';
+import { BaseWallet } from './base-wallet';
+
+type PlatformWalletType = 'mobile-web' | 'web';
 
 export class PlatformWallet extends BaseWallet {
-
   currentPlatformWallet: BaseWallet | undefined;
 
   platformWalletMap: Map<PlatformWalletType, BaseWallet> = new Map();
@@ -42,32 +42,37 @@ export class PlatformWallet extends BaseWallet {
 
   async init(): Promise<void> {
     if (isMobile()) {
-      this.currentPlatformWallet = this.platformWalletMap.get("mobile-web");
+      this.currentPlatformWallet = this.platformWalletMap.get('mobile-web');
     } else {
-      this.currentPlatformWallet = this.platformWalletMap.get("web");
+      this.currentPlatformWallet = this.platformWalletMap.get('web');
     }
     if (!this.currentPlatformWallet) {
-      throw new Error("No platform wallet set");
+      throw new Error('No platform wallet set');
     }
-    await this.currentPlatformWallet.init()
+    await this.currentPlatformWallet.init();
   }
-  connect(chainId: Chain["chainId"]): Promise<void> {
+  connect(chainId: Chain['chainId']): Promise<void> {
     return this.currentPlatformWallet?.connect(chainId);
   }
-  disconnect(chainId: Chain["chainId"]): Promise<void> {
+  disconnect(chainId: Chain['chainId']): Promise<void> {
     return this.currentPlatformWallet.disconnect(chainId);
   }
-  getAccount(chainId: Chain["chainId"]): Promise<WalletAccount> {
+  getAccount(chainId: Chain['chainId']): Promise<WalletAccount> {
     return this.currentPlatformWallet?.getAccount(chainId);
   }
-  getOfflineSigner(chainId: Chain["chainId"], preferredSignType?: SignType): Promise<IGenericOfflineSigner> {
-    return this.currentPlatformWallet.getOfflineSigner(chainId, preferredSignType);
+  getOfflineSigner(
+    chainId: Chain['chainId'],
+    preferredSignType?: SignType
+  ): Promise<IGenericOfflineSigner> {
+    return this.currentPlatformWallet.getOfflineSigner(
+      chainId,
+      preferredSignType
+    );
   }
-  addSuggestChain(chainId: Chain["chainId"]): Promise<void> {
+  addSuggestChain(chainId: Chain['chainId']): Promise<void> {
     return this.currentPlatformWallet?.addSuggestChain(chainId);
   }
-  getProvider(chainId: Chain["chainId"]): Promise<unknown> {
+  getProvider(chainId: Chain['chainId']): Promise<unknown> {
     return this.currentPlatformWallet.getProvider(chainId);
   }
-
 }

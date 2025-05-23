@@ -1,4 +1,3 @@
-
 export const clientNotExistError = new Error('Client not exist');
 
 export class ChainNotExist extends Error {
@@ -15,7 +14,7 @@ export class ChainNameNotExist extends Error {
 
 export class WalletNotExist extends Error {
   constructor(walletName: string) {
-    super(`Wallet ${walletName} not Exist, please add it first`)
+    super(`Wallet ${walletName} not Exist, please add it first`);
   }
 }
 export class NoWalletConnectedYet extends Error {

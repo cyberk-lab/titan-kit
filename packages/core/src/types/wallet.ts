@@ -1,7 +1,7 @@
+import { SignClientTypes } from '@walletconnect/types';
 
-import { SignClientTypes } from "@walletconnect/types";
-import { DappEnv, OS } from "./common";
-import { EndpointOptions } from "./manager";
+import { DappEnv, OS } from './common';
+import { EndpointOptions } from './manager';
 export interface Key {
   readonly name: string;
   readonly algo: string;
@@ -25,20 +25,20 @@ export type WalletMode =
 
 export interface AppUrl {
   native?:
-  | string
-  | {
-    android?: string;
-    ios?: string;
-    macos?: string;
-    windows?: string;
-  };
+    | string
+    | {
+        android?: string;
+        ios?: string;
+        macos?: string;
+        windows?: string;
+      };
   universal?: string;
 }
 
 export interface Wallet {
-  windowKey?: string,
-  ethereumKey?: string,
-  walletIdentifyKey?: string,
+  windowKey?: string;
+  ethereumKey?: string;
+  walletIdentifyKey?: string;
   name: string;
   mode: WalletMode;
   prettyName: string;
@@ -67,11 +67,11 @@ export interface Wallet {
       name: string
     ) => string;
   };
-  endpoints?: EndpointOptions['endpoints']
+  endpoints?: EndpointOptions['endpoints'];
   walletConnectLink?: {
     android?: string;
     ios?: string;
-  },
+  };
   dappBrowserLink?: (url: string) => string;
 }
 
@@ -122,53 +122,52 @@ export interface SimpleAccount {
   username?: string;
 }
 
-
 export enum WalletState {
-  Disconnected = "Disconnected",
-  Connecting = "Connecting",
-  Connected = "Connected",
-  Rejected = "Rejected",
-  NotExist = "NotExist",
+  Disconnected = 'Disconnected',
+  Connecting = 'Connecting',
+  Connected = 'Connected',
+  Rejected = 'Rejected',
+  NotExist = 'NotExist',
 }
 
 export interface WalletEvents {
-  'accountChanged': [event: any];
-  'displayWalletConnectQRCodeUri': [chainId: string];
+  accountChanged: [event: any];
+  displayWalletConnectQRCodeUri: [chainId: string];
 }
 
 export const WcProviderEventType = {
-  chainChanged: (chainId: string) => { },
-  accountsChanged: (accounts: string[]) => { },
+  chainChanged: (chainId: string) => {},
+  accountsChanged: (accounts: string[]) => {},
 };
 
 export const WcEventTypes = {
-  display_uri: (uri: string) => { },
-  session_ping: (payload: SignClientTypes.EventArguments['session_ping']) => { },
+  display_uri: (uri: string) => {},
+  session_ping: (payload: SignClientTypes.EventArguments['session_ping']) => {},
   session_event: (
-    payload: SignClientTypes.EventArguments['session_event'],
-  ) => { },
+    payload: SignClientTypes.EventArguments['session_event']
+  ) => {},
   session_update: (
-    payload: SignClientTypes.EventArguments['session_update'],
-  ) => { },
+    payload: SignClientTypes.EventArguments['session_update']
+  ) => {},
   session_delete: (
-    payload: SignClientTypes.EventArguments['session_delete'],
-  ) => { },
+    payload: SignClientTypes.EventArguments['session_delete']
+  ) => {},
   session_proposal: (
-    payload: SignClientTypes.EventArguments['session_proposal'],
-  ) => { },
+    payload: SignClientTypes.EventArguments['session_proposal']
+  ) => {},
   session_extend: (
-    payload: SignClientTypes.EventArguments['session_extend'],
-  ) => { },
+    payload: SignClientTypes.EventArguments['session_extend']
+  ) => {},
   session_expire: (
-    payload: SignClientTypes.EventArguments['session_expire'],
-  ) => { },
+    payload: SignClientTypes.EventArguments['session_expire']
+  ) => {},
   session_request: (
-    payload: SignClientTypes.EventArguments['session_request'],
-  ) => { },
+    payload: SignClientTypes.EventArguments['session_request']
+  ) => {},
   session_request_sent: (
-    payload: SignClientTypes.EventArguments['session_request_sent'],
-  ) => { },
+    payload: SignClientTypes.EventArguments['session_request_sent']
+  ) => {},
   proposal_expire: (
-    payload: SignClientTypes.EventArguments['proposal_expire'],
-  ) => { },
+    payload: SignClientTypes.EventArguments['proposal_expire']
+  ) => {},
 } as const;

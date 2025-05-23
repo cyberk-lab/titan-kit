@@ -1,1 +1,1 @@
-export type ChainName = string
+export type ChainName = string;

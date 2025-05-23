@@ -1,36 +1,35 @@
-import { clientNotExistError } from "./errors"
+import { clientNotExistError } from './errors';
 
 // travelObject
 export const travelObject = (obj: any, paths: string[]) => {
   try {
     const object = paths.reduce((acc, key) => {
-      return acc[key]
-    }, obj)
-    return object
+      return acc[key];
+    }, obj);
+    return object;
   } catch (error) {
-    return undefined
+    return undefined;
   }
-}
-
+};
 
 export const getClientFromExtension = async (key: string | string[]) => {
   if (typeof window === 'undefined') {
-    return undefined
+    return undefined;
   }
 
-  const keys = Array.isArray(key) ? key : key.split('.')
+  const keys = Array.isArray(key) ? key : key.split('.');
 
-  const wallet = travelObject(window, keys)
+  const wallet = travelObject(window, keys);
 
   if (wallet) {
-    return wallet
+    return wallet;
   }
 
   if (document.readyState === 'complete') {
     if (wallet) {
       return wallet;
     } else {
-      throw clientNotExistError
+      throw clientNotExistError;
     }
   }
 
@@ -40,7 +39,7 @@ export const getClientFromExtension = async (key: string | string[]) => {
         event.target &&
         (event.target as Document).readyState === 'complete'
       ) {
-        const wallet = travelObject(window as never, keys)
+        const wallet = travelObject(window as never, keys);
 
         if (wallet) {
           resolve(wallet);
@@ -54,9 +53,4 @@ export const getClientFromExtension = async (key: string | string[]) => {
 
     document.addEventListener('readystatechange', documentStateChange);
   });
-
-
-
-
-
-}
+};

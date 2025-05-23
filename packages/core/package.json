@@ -35,9 +35,9 @@
     "@chain-registry/v2": "^1.71.71",
     "@chain-registry/v2-keplr": "^0.0.72",
     "@chain-registry/v2-types": "^0.53.40",
-    "@interchainjs/cosmos": "1.9.15",
-    "@interchainjs/cosmos-types": "1.9.15",
-    "@interchainjs/types": "1.9.15",
+    "@titanlabjs/cosmos": "0.2.7-alpha.0",
+    "@titanlabjs/cosmos-types": "0.2.7-alpha.0",
+    "@titanlabjs/types": "0.2.7-alpha.0",
     "@ledgerhq/hw-app-cosmos": "^6.30.4",
     "@ledgerhq/hw-transport": "^6.31.4",
     "@ledgerhq/hw-transport-webhid": "^6.30.0",
@@ -48,7 +48,6 @@
     "base64-js": "^1.5.1",
     "bowser": "^2.11.0",
     "buffer": "^6.0.3",
-    "interchainjs": "1.11.9",
     "long": "^5.2.3"
   },
   "devDependencies": {

@@ -1,8 +1,9 @@
-import { HttpEndpoint } from '@interchainjs/types';
-import { Chain } from "@chain-registry/v2-types";
-import { ChainName } from './chain'
-import { SignType } from "./common";
-import { SigningOptions as InterchainSigningOptions } from '@interchainjs/cosmos/types/signing-client'
+import { Chain } from '@chain-registry/v2-types';
+import { SigningOptions as InterchainSigningOptions } from '@titanlabjs/cosmos/types/signing-client';
+import { HttpEndpoint } from '@titanlabjs/types';
+
+import { ChainName } from './chain';
+import { SignType } from './common';
 
 export interface SignerOptions {
   signing?: (chain: Chain | ChainName) => InterchainSigningOptions | undefined;

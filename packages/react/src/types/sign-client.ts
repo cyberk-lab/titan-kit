@@ -1,5 +1,5 @@
-import { WalletManager } from "@titan-kit/core";
+import { WalletManager } from '@titan-kit/core';
 
 export type SigningClient = Awaited<
-  ReturnType<WalletManager["getSigningClient"]>
+  ReturnType<WalletManager['getSigningClient']>
 >;

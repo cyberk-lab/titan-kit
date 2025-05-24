@@ -1,5 +1,4 @@
-import { SigningClient } from "@interchainjs/cosmos/signing-client";
-import { AssetList, Chain } from "@chain-registry/v2-types";
+import { AssetList, Chain } from '@chain-registry/v2-types';
 import {
   BaseWallet,
   clientNotExistError,
@@ -10,14 +9,16 @@ import {
   WalletAccount,
   WalletManager,
   WalletState,
-} from "@titan-kit/core";
-import { SigningOptions as InterchainSigningOptions } from "@interchainjs/cosmos/types/signing-client";
-import { HttpEndpoint } from "@interchainjs/types";
-import { createStore } from "zustand";
-import { immer } from "zustand/middleware/immer";
-import { persist, createJSONStorage } from "zustand/middleware";
-import { dedupeAsync } from "../utils";
-import { StatefulWallet } from "./stateful-wallet";
+} from '@titan-kit/core';
+import type { SigningClient } from '@titanlabjs/cosmos/signing-client';
+import { SigningOptions as InterchainSigningOptions } from '@titanlabjs/cosmos/types/signing-client';
+import { HttpEndpoint } from '@titanlabjs/types';
+import { createStore } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
+
+import { dedupeAsync } from '../utils';
+import { StatefulWallet } from './stateful-wallet';
 
 const immerSyncUp = (newWalletManager: WalletManager) => {
   return (draft: {
@@ -93,8 +94,8 @@ export const createInterchainStore = (walletManager: WalletManager) => {
     persist(
       immer<InterchainStore>((set, get) => ({
         chainWalletState: [],
-        currentWalletName: "",
-        currentChainName: "",
+        currentWalletName: '',
+        currentChainName: '',
         chains: [...walletManager.chains],
         assetLists: [...walletManager.assetLists],
         wallets: walletManager.wallets.map((wallet) => {
@@ -119,7 +120,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
         signerOptionMap: { ...walletManager.signerOptionMap },
         endpointOptionsMap: { ...walletManager.endpointOptionsMap },
 
-        walletConnectQRCodeUri: "",
+        walletConnectQRCodeUri: '',
 
         isReady: false,
 
@@ -132,7 +133,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
         closeModal: () => {
           set((draft) => {
             draft.modalIsOpen = false;
-            draft.walletConnectQRCodeUri = ""; // reset the QR code uri when modal is closed
+            draft.walletConnectQRCodeUri = ''; // reset the QR code uri when modal is closed
           });
         },
 
@@ -223,8 +224,8 @@ export const createInterchainStore = (walletManager: WalletManager) => {
                     chainName: chain.chainName,
                     walletName: wallet.info.name,
                     walletState: WalletState.Disconnected,
-                    rpcEndpoint: "",
-                    errorMessage: "",
+                    rpcEndpoint: '',
+                    errorMessage: '',
                     account: undefined,
                   });
                 }
@@ -368,8 +369,8 @@ export const createInterchainStore = (walletManager: WalletManager) => {
                     chainName: newChain.chainName,
                     walletName: wallet.info.name,
                     walletState: WalletState.Disconnected,
-                    rpcEndpoint: "",
-                    errorMessage: "",
+                    rpcEndpoint: '',
+                    errorMessage: '',
                     account: undefined,
                   });
                 }
@@ -483,7 +484,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
         },
       })),
       {
-        name: "interchain-kit-store",
+        name: 'interchain-kit-store',
         storage: createJSONStorage(() => localStorage),
         partialize: (state) => ({
           chainWalletState: state.chainWalletState.map((cws) => ({
@@ -501,7 +502,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
           // optional
           return (state, error) => {
             if (error) {
-              console.log("an error happened during hydration", error);
+              console.log('an error happened during hydration', error);
             } else {
               // console.log('interchain-kit store hydration finished')
             }

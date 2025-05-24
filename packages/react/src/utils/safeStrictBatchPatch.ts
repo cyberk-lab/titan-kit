@@ -7,19 +7,20 @@ type PropertyPatch<T, K extends keyof T> = T[K];
 type DescriptorPatch = PropertyDescriptor;
 
 type PatchConfig<T> = {
-  [K in keyof T]?:
-  MethodPatch<T, K> |
-  PropertyPatch<T, K> |
-  DescriptorPatch;
+  [K in keyof T]?: MethodPatch<T, K> | PropertyPatch<T, K> | DescriptorPatch;
 };
 
-export function safeStrictBatchPatch<T>(target: T, patches: PatchConfig<T>): void {
+export function safeStrictBatchPatch<T>(
+  target: T,
+  patches: PatchConfig<T>
+): void {
   (Object.keys(patches) as (keyof T)[]).forEach((key) => {
     const patch = patches[key];
     const original = target[key];
 
     const isDescriptor =
-      patch && typeof patch === 'object' &&
+      patch &&
+      typeof patch === 'object' &&
       (typeof (patch as PropertyDescriptor).get === 'function' ||
         typeof (patch as PropertyDescriptor).set === 'function');
 
@@ -29,7 +30,7 @@ export function safeStrictBatchPatch<T>(target: T, patches: PatchConfig<T>): voi
       Object.defineProperty(target, key, {
         configurable: true,
         enumerable: originalDescriptor ? originalDescriptor.enumerable : true,
-        ...descriptor
+        ...descriptor,
       });
     } else if (typeof original === 'function' && typeof patch === 'function') {
       // ⬇ 这里精准类型推导
@@ -49,4 +50,3 @@ export function safeStrictBatchPatch<T>(target: T, patches: PatchConfig<T>): voi
     }
   });
 }
-

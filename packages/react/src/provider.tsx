@@ -1,15 +1,16 @@
-import React, { ReactElement, useEffect, useRef } from "react";
-import { createContext, useContext } from "react";
+import { AssetList, Chain } from '@chain-registry/v2-types';
 import {
   BaseWallet,
-  SignerOptions,
   EndpointOptions,
+  SignerOptions,
   WalletManager,
-} from "@titan-kit/core";
-import { AssetList, Chain } from "@chain-registry/v2-types";
-import { ModalRenderer, WalletModalProps } from "./modal";
-import { createInterchainStore, InterchainStore } from "./store";
-import { StoreApi } from "zustand";
+} from '@titan-kit/core';
+import React, { ReactElement, useEffect, useRef } from 'react';
+import { createContext, useContext } from 'react';
+import { StoreApi } from 'zustand';
+
+import { ModalRenderer, WalletModalProps } from './modal';
+import { createInterchainStore, InterchainStore } from './store';
 
 type InterchainWalletContextType = StoreApi<InterchainStore>;
 
@@ -64,7 +65,7 @@ export const useInterchainWalletContext = () => {
   const context = useContext(InterchainWalletContext);
   if (!context) {
     throw new Error(
-      "useInterChainWalletContext must be used within a InterChainProvider"
+      'useInterChainWalletContext must be used within a InterChainProvider'
     );
   }
   return context;

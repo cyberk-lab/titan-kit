@@ -1,8 +1,8 @@
-import { useWalletManager } from "./useWalletManager"
+import { useWalletManager } from './useWalletManager';
 
 export const useWalletModal = () => {
-  const { modalIsOpen, openModal, closeModal } = useWalletManager()
+  const { modalIsOpen, openModal, closeModal } = useWalletManager();
   return {
     modalIsOpen, open: openModal, close: closeModal
-  }
-}
+  };
+};

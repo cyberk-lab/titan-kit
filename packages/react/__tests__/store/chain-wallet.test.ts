@@ -1,14 +1,15 @@
-import { ChainWallet } from "../../src/store/chain-wallet";
-import { BaseWallet, WalletAccount } from "@titan-kit/core";
-import { IGenericOfflineSigner } from "@interchainjs/types";
+import { BaseWallet, WalletAccount } from '@titan-kit/core';
+import { IGenericOfflineSigner } from '@titanlabjs/types';
 
-describe("ChainWallet", () => {
+import { ChainWallet } from '../../src/store/chain-wallet';
+
+describe('ChainWallet', () => {
   let mockOriginalWallet: jest.Mocked<BaseWallet>;
   let chainWallet: ChainWallet<BaseWallet>;
 
   beforeEach(() => {
     mockOriginalWallet = {
-      info: { name: "Mock Wallet" },
+      info: { name: 'Mock Wallet' },
       getProvider: jest.fn(),
       init: jest.fn(),
       connect: jest.fn(),
@@ -26,28 +27,28 @@ describe("ChainWallet", () => {
     );
   });
 
-  it("should initialize the wallet", async () => {
+  it('should initialize the wallet', async () => {
     await chainWallet.init();
     expect(mockOriginalWallet.init).toHaveBeenCalled();
   });
 
-  it("should connect to a chain", async () => {
-    const chainId = "test-chain";
+  it('should connect to a chain', async () => {
+    const chainId = 'test-chain';
     await chainWallet.connect(chainId);
     expect(mockOriginalWallet.connect).toHaveBeenCalledWith(chainId);
   });
 
-  it("should disconnect from a chain", async () => {
-    const chainId = "test-chain";
+  it('should disconnect from a chain', async () => {
+    const chainId = 'test-chain';
     await chainWallet.disconnect(chainId);
     expect(mockOriginalWallet.disconnect).toHaveBeenCalledWith(chainId);
   });
 
-  it("should get an account for a chain", async () => {
-    const chainId = "test-chain";
+  it('should get an account for a chain', async () => {
+    const chainId = 'test-chain';
     const mockAccount: WalletAccount = {
-      address: "test-address",
-      algo: "secp256k1",
+      address: 'test-address',
+      algo: 'secp256k1',
       pubkey: new Uint8Array(),
     };
     mockOriginalWallet.getAccount.mockResolvedValue(mockAccount);
@@ -57,8 +58,8 @@ describe("ChainWallet", () => {
     expect(account).toEqual(mockAccount);
   });
 
-  it("should get an offline signer for a chain", async () => {
-    const chainId = "test-chain";
+  it('should get an offline signer for a chain', async () => {
+    const chainId = 'test-chain';
     const mockSigner: IGenericOfflineSigner = {} as IGenericOfflineSigner;
     mockOriginalWallet.getOfflineSigner.mockResolvedValue(mockSigner);
 
@@ -67,14 +68,14 @@ describe("ChainWallet", () => {
     expect(signer).toEqual(mockSigner);
   });
 
-  it("should add a suggested chain", async () => {
-    const chainId = "test-chain";
+  it('should add a suggested chain', async () => {
+    const chainId = 'test-chain';
     await chainWallet.addSuggestChain(chainId);
     expect(mockOriginalWallet.addSuggestChain).toHaveBeenCalledWith(chainId);
   });
 
-  it("should get a provider for a chain", async () => {
-    const chainId = "test-chain";
+  it('should get a provider for a chain', async () => {
+    const chainId = 'test-chain';
     const mockProvider = {};
     mockOriginalWallet.getProvider.mockResolvedValue(mockProvider);
 

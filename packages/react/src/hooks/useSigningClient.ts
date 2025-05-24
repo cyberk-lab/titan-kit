@@ -1,6 +1,7 @@
-import { useWalletManager } from "./useWalletManager";
-import { useAsync } from "./useAsync";
-import { WalletState } from "@titan-kit/core";
+import { WalletState } from '@titan-kit/core';
+
+import { useAsync } from './useAsync';
+import { useWalletManager } from './useWalletManager';
 
 export const useSigningClient = (chainName: string, walletName: string) => {
   const { getSigningClient, getChainWalletState, getRpcEndpoint } =

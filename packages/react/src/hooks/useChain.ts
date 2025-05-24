@@ -1,8 +1,9 @@
-import { UseChainReturnType } from "../types/chain";
-import { useWalletManager } from "./useWalletManager";
-import { ChainNameNotExist } from "@titan-kit/core";
-import { useSigningClient } from "./useSigningClient";
-import { useWalletModal } from "./useWalletModal";
+import { ChainNameNotExist } from '@titan-kit/core';
+
+import { UseChainReturnType } from '../types/chain';
+import { useSigningClient } from './useSigningClient';
+import { useWalletManager } from './useWalletManager';
+import { useWalletModal } from './useWalletModal';
 
 export const useChain = (chainName: string): UseChainReturnType => {
   const {

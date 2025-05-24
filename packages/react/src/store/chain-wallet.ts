@@ -1,22 +1,22 @@
-import { Chain } from "@chain-registry/v2-types";
-import { BaseWallet, WalletAccount } from "@titan-kit/core";
-import { IGenericOfflineSigner } from "@interchainjs/types";
+import { Chain } from '@chain-registry/v2-types';
+import { BaseWallet, WalletAccount } from '@titan-kit/core';
+import { IGenericOfflineSigner } from '@titanlabjs/types';
 
 export class ChainWallet<TWallet extends BaseWallet> extends BaseWallet {
-  getProvider(chainId: Chain["chainId"]): Promise<unknown> {
+  getProvider(chainId: Chain['chainId']): Promise<unknown> {
     return this.originalWallet.getProvider(chainId);
   }
   originalWallet: TWallet;
 
-  connectWithState: TWallet["connect"];
-  disconnectWithState: TWallet["disconnect"];
-  getAccountWithState: TWallet["getAccount"];
+  connectWithState: TWallet['connect'];
+  disconnectWithState: TWallet['disconnect'];
+  getAccountWithState: TWallet['getAccount'];
 
   constructor(
     originalWallet: TWallet,
-    connectWithState: TWallet["connect"],
-    disconnectWithState: TWallet["disconnect"],
-    getAccountWithState: TWallet["getAccount"]
+    connectWithState: TWallet['connect'],
+    disconnectWithState: TWallet['disconnect'],
+    getAccountWithState: TWallet['getAccount']
   ) {
     super(originalWallet?.info);
     this.originalWallet = originalWallet;
@@ -40,7 +40,7 @@ export class ChainWallet<TWallet extends BaseWallet> extends BaseWallet {
   async getOfflineSigner(chainId: string): Promise<IGenericOfflineSigner> {
     return this.originalWallet.getOfflineSigner(chainId);
   }
-  async addSuggestChain(chainId: Chain["chainId"]): Promise<void> {
+  async addSuggestChain(chainId: Chain['chainId']): Promise<void> {
     return this.originalWallet.addSuggestChain(chainId);
   }
 }

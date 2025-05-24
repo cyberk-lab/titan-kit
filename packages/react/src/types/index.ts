@@ -1,1 +1,1 @@
-export * from './sign-client'
+export * from './sign-client';

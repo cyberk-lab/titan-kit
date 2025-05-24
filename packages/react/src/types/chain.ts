@@ -1,9 +1,9 @@
-import { HttpEndpoint } from "@interchainjs/types";
-import { Chain, AssetList } from "@chain-registry/v2-types";
-import { BaseWallet, WalletState } from "@titan-kit/core";
-import { SigningClient } from "./sign-client";
-import { ChainWallet } from "../store/chain-wallet";
-import { StatefulWallet } from "../store/stateful-wallet";
+import { AssetList, Chain } from '@chain-registry/v2-types';
+import type { WalletState } from '@titan-kit/core';
+import { HttpEndpoint } from '@titanlabjs/types';
+
+import { StatefulWallet } from '../store/stateful-wallet';
+import { SigningClient } from './sign-client';
 
 export type CosmosKitUseChainReturnType = {
   connect: () => void;
@@ -32,7 +32,7 @@ export type UseChainReturnType = {
 
 export type UseChainWalletReturnType = Omit<
   UseChainReturnType,
-  "openView" | "closeView"
+  'openView' | 'closeView'
 >;
 
 export type UseInterchainClientReturnType = {

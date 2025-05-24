@@ -1,4 +1,4 @@
-import { BaseWallet } from "@titan-kit/core";
+import { BaseWallet } from '@titan-kit/core';
 
 export const decorateWallet = <T extends BaseWallet>(
   wallet: T,
@@ -8,7 +8,7 @@ export const decorateWallet = <T extends BaseWallet>(
     get(target, prop, receiver) {
       if (prop in decorateMethods) {
         const value = decorateMethods[prop as keyof T];
-        if (typeof value === "function") {
+        if (typeof value === 'function') {
           return value.bind(target);
         }
         return value;

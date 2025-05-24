@@ -6,16 +6,18 @@ const pendingRequests = new Map<string, Promise<any>>();
  * @param asyncFn - A function that returns a Promise.
  * @returns A Promise resolving to the result of the async function.
  */
-export async function dedupeAsync<T>(key: string, asyncFn: () => Promise<T>): Promise<T> {
-    if (pendingRequests.has(key)) {
-        return pendingRequests.get(key)!;
-    }
+export async function dedupeAsync<T>(
+  key: string,
+  asyncFn: () => Promise<T>
+): Promise<T> {
+  if (pendingRequests.has(key)) {
+    return pendingRequests.get(key)!;
+  }
 
-    const promise = asyncFn()
-        .finally(() => {
-            pendingRequests.delete(key);
-        });
+  const promise = asyncFn().finally(() => {
+    pendingRequests.delete(key);
+  });
 
-    pendingRequests.set(key, promise);
-    return promise;
+  pendingRequests.set(key, promise);
+  return promise;
 }

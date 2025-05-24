@@ -1,11 +1,17 @@
+import { Chain } from '@chain-registry/v2-types';
 import {
   BaseWallet,
   WalletAccount,
   WalletState,
   WCWallet,
-} from "@titan-kit/core";
-import { InterchainStore } from "./store";
-import { Chain } from "@chain-registry/v2-types";
+} from '@titan-kit/core';
+import type {
+  AccountData,
+  IGenericOfflineSignArgs,
+  IGenericOfflineSigner,
+} from '@titanlabjs/types';
+
+import { InterchainStore } from './store';
 
 export class StatefulWallet extends BaseWallet {
   originalWallet: BaseWallet;
@@ -26,7 +32,7 @@ export class StatefulWallet extends BaseWallet {
     this.originalWallet = wallet;
     this.walletName = wallet.info.name;
     this.walletState = WalletState.Disconnected;
-    this.errorMessage = "";
+    this.errorMessage = '';
 
     this.walletSet = walletSet;
     this.walletGet = walletGet;
@@ -34,7 +40,7 @@ export class StatefulWallet extends BaseWallet {
     this.get = get;
   }
 
-  getChainToConnect(chainId?: Chain["chainId"]): Chain {
+  getChainToConnect(chainId?: Chain['chainId']): Chain {
     const { currentChainName, chains } = this.get();
     const lastChainName = currentChainName;
     const lastChain = chains.find((chain) => chain.chainName === lastChainName);
@@ -45,7 +51,7 @@ export class StatefulWallet extends BaseWallet {
     return this.originalWallet.init();
   }
 
-  async connect(chainId: Chain["chainId"]): Promise<void> {
+  async connect(chainId: Chain['chainId']): Promise<void> {
     const { get, set, walletName, walletGet, walletSet, originalWallet } = this;
 
     const chainToConnect = this.getChainToConnect(chainId);
@@ -58,14 +64,14 @@ export class StatefulWallet extends BaseWallet {
       return;
     }
 
-    if (walletName === "WalletConnect" && state === WalletState.Connected) {
+    if (walletName === 'WalletConnect' && state === WalletState.Connected) {
       return;
     }
 
     set((draft) => {
       draft.currentChainName = chainToConnect.chainName;
       draft.currentWalletName = walletName;
-      draft.walletConnectQRCodeUri = "";
+      draft.walletConnectQRCodeUri = '';
     });
 
     walletSet((draft) => {
@@ -73,9 +79,10 @@ export class StatefulWallet extends BaseWallet {
     });
     get().updateChainWalletState(walletName, chainToConnect.chainName, {
       walletState: WalletState.Connecting,
-      errorMessage: "",
+      errorMessage: '',
     });
     try {
+      // TODO: this is suspicious
       if (originalWallet instanceof WCWallet) {
         originalWallet.setOnPairingUriCreatedCallback((uri) => {
           set((draft) => {
@@ -95,7 +102,7 @@ export class StatefulWallet extends BaseWallet {
 
       await walletGet().getAccount(chainToConnect.chainId);
     } catch (error) {
-      if ((error as any).message === "Request rejected") {
+      if ((error as any).message === 'Request rejected') {
         get().updateChainWalletState(walletName, chainToConnect.chainName, {
           walletState: WalletState.Rejected,
           errorMessage: (error as any).message,
@@ -116,7 +123,7 @@ export class StatefulWallet extends BaseWallet {
       });
     }
   }
-  async disconnect(chainId: Chain["chainId"]) {
+  async disconnect(chainId: Chain['chainId']) {
     const { get, walletName, walletSet, originalWallet } = this;
 
     const chainToConnect = this.getChainToConnect(chainId);
@@ -129,11 +136,13 @@ export class StatefulWallet extends BaseWallet {
       });
       walletSet((draft) => {
         draft.walletState = WalletState.Disconnected;
-        draft.errorMessage = "";
+        draft.errorMessage = '';
       });
-    } catch (error) {}
+    } catch (error) {
+      //
+    }
   }
-  async getAccount(chainId: Chain["chainId"]): Promise<WalletAccount> {
+  async getAccount(chainId: Chain['chainId']): Promise<WalletAccount> {
     const chainToConnect = this.getChainToConnect(chainId);
     const { get, walletName, originalWallet } = this;
     try {
@@ -147,25 +156,25 @@ export class StatefulWallet extends BaseWallet {
     }
   }
   getOfflineSigner(
-    chainId: Chain["chainId"]
+    chainId: Chain['chainId']
   ): Promise<
-    import("@interchainjs/types").IGenericOfflineSigner<
+    IGenericOfflineSigner<
       unknown,
       unknown,
       unknown,
-      import("@interchainjs/types").IGenericOfflineSignArgs<unknown, unknown>,
-      import("@interchainjs/types").AccountData
+      IGenericOfflineSignArgs<unknown, unknown>,
+      AccountData
     >
   > {
     return this.originalWallet.getOfflineSigner(chainId);
   }
-  addSuggestChain(chainId: Chain["chainId"]): Promise<void> {
+  addSuggestChain(chainId: Chain['chainId']): Promise<void> {
     return this.originalWallet.addSuggestChain(chainId);
   }
-  getProvider(chainId?: Chain["chainId"]): Promise<any> {
+  getProvider(chainId?: Chain['chainId']): Promise<any> {
     return this.originalWallet.getProvider(chainId);
   }
-  getChainById(chainId: Chain["chainId"]): Chain {
+  getChainById(chainId: Chain['chainId']): Chain {
     return this.originalWallet.getChainById(chainId);
   }
 }

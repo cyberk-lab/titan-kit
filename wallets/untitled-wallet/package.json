@@ -1,0 +1,40 @@
+{
+  "name": "@titan-kit/untitled-wallet",
+  "version": "0.0.3-alpha.7",
+  "author": "BangBu <68235687+bangbu10820@users.noreply.github.com>",
+  "description": "titan-kit wallet connector",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "homepage": "https://github.com/titan-kit/untitled-wallet",
+  "license": "SEE LICENSE IN LICENSE",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/titan-kit/untitled-wallet"
+  },
+  "bugs": {
+    "url": "https://github.com/titan-kit/untitled-wallet/issues"
+  },
+  "resolutions": {
+    "@titan-kit/core": "file:../../packages/core"
+  },
+  "scripts": {
+    "copy": "copyfiles -f ../../LICENSE README.md package.json dist",
+    "clean": "rimraf dist/**",
+    "prepare": "npm run build",
+    "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy",
+    "lint": "eslint . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "watch:dev": "tsc -w -p tsconfig.esm.json & tsc -w"
+  },
+  "keywords": [],
+  "dependencies": {
+    "@titan-kit/core": "file:../../packages/core"
+  },
+  "gitHead": "35337e4470a0594ba644d31be8e24c8e295296f6"
+}

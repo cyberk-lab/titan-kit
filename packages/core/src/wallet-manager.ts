@@ -1,8 +1,12 @@
 import { AssetList, Chain } from '@chain-registry/v2-types';
 import { SigningClient } from '@titanlabjs/cosmos/signing-client';
-import { SigningOptions as InterchainSigningOptions } from '@titanlabjs/cosmos/types/signing-client';
+import type { EncodedMessage } from '@titanlabjs/cosmos/types/signer';
+import { SigningOptions as TitanSigningOptions } from '@titanlabjs/cosmos/types/signing-client';
 import { ICosmosGenericOfflineSigner } from '@titanlabjs/cosmos/types/wallet';
-import { HttpEndpoint } from '@titanlabjs/types';
+import { toDecoder } from '@titanlabjs/cosmos/utils';
+import { PubKey as Secp256k1PubKey } from '@titanlabjs/cosmos-types/cosmos/crypto/secp256k1/keys';
+import { EthAccount } from '@titanlabjs/cosmos-types/ethermint/types/v1/account';
+import { HttpEndpoint, IKey } from '@titanlabjs/types';
 import Bowser from 'bowser';
 
 import {
@@ -34,7 +38,7 @@ export class WalletManager {
   endpointOptions: EndpointOptions | undefined;
 
   preferredSignTypeMap: Record<Chain['chainName'], SignType> = {};
-  signerOptionMap: Record<Chain['chainName'], InterchainSigningOptions> = {};
+  signerOptionMap: Record<Chain['chainName'], TitanSigningOptions> = {};
   endpointOptionsMap: Record<Chain['chainName'], Endpoints> = {};
 
   constructor(
@@ -59,6 +63,39 @@ export class WalletManager {
         signerOptions?.preferredSignType?.(chain.chainName);
       this.endpointOptionsMap[chain.chainName] =
         endpointOptions?.endpoints?.[chain.chainName];
+    });
+
+    // TODO: move this logic to somewhere else
+    ['titantestnet', 'titanmainnet'].forEach((chainName) => {
+      this.signerOptionMap[chainName] = {
+        signerOptions: {
+          parseAccount: (encodedAccount: EncodedMessage) => {
+            if (encodedAccount.typeUrl === '/ethermint.types.v1.EthAccount') {
+              const decoder = toDecoder(EthAccount);
+              const account = decoder.fromPartial(
+                decoder.decode(encodedAccount.value)
+              );
+              const baseAccount =
+                (account as any).baseVestingAccount?.baseAccount ||
+                (account as any).baseAccount ||
+                account;
+              return baseAccount;
+            }
+          },
+          encodePublicKey: (key: IKey): EncodedMessage => {
+            return {
+              typeUrl: '/ethermint.crypto.v1.ethsecp256k1.PubKey',
+              value: Secp256k1PubKey.encode(
+                Secp256k1PubKey.fromPartial({ key: key.value })
+              ).finish(),
+            };
+          },
+        },
+      };
+      this.preferredSignTypeMap[chainName] =
+        signerOptions?.preferredSignType?.(chainName) || 'direct';
+      this.endpointOptionsMap[chainName] =
+        endpointOptions?.endpoints?.[chainName];
     });
 
     this.wallets.forEach((wallet) => {
@@ -271,11 +308,11 @@ export class WalletManager {
     return this.preferredSignTypeMap[chainName] || 'direct';
   }
 
-  getSignerOptions(chainName: string): InterchainSigningOptions {
+  getSignerOptions(chainName: string): TitanSigningOptions {
     const chain = this.getChainByName(chainName);
     const signingOptions = this.signerOptionMap[chainName];
 
-    const options: InterchainSigningOptions = {
+    const options: TitanSigningOptions = {
       broadcast: {
         checkTx: true,
         deliverTx: true,

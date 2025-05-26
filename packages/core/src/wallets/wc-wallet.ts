@@ -23,7 +23,6 @@ import UniversalProvider, {
   UniversalProviderOpts,
 } from '@walletconnect/universal-provider';
 import { fromByteArray, toByteArray } from 'base64-js';
-import { MsgSend } from 'cosmjs-types/cosmos/bank/v1beta1/tx';
 
 import { WalletConnectIcon } from '../constant';
 import {
@@ -40,8 +39,6 @@ import {
   WcProviderEventType,
 } from '../types/wallet';
 import { BaseWallet } from './base-wallet';
-const RPC_URL = 'https://titan-testnet-rpc.titanlab.io:443';
-import { TxRaw } from 'cosmjs-types/cosmos/tx/v1beta1/tx';
 
 export class WCWallet extends BaseWallet {
   pairingUri: string;
@@ -79,13 +76,13 @@ export class WCWallet extends BaseWallet {
     this.events.removeAllListeners();
 
     const defaultOption: UniversalProviderOpts = {
-      projectId: '15a12f05b38b78014b2bb06d77eecdc3',
+      projectId: '3ef9e46f71262db45cc537afa04f816f',
       // optional parameters
       relayUrl: 'wss://relay.walletconnect.org',
       metadata: {
         name: 'Example Dapp',
         description: 'Example Dapp',
-        url: 'ssupabase',
+        url: '#',
         icons: ['https://walletconnect.com/walletconnect-logo.png'],
       },
     };

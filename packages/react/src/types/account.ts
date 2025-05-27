@@ -1,3 +1,3 @@
 export type UseAccountReturnType = {
-    address: string
-}
+  address: string;
+};

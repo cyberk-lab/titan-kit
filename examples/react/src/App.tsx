@@ -5,6 +5,9 @@ import WalletConnect from "./pages/wallet-connect";
 import UseChain from "./pages/use-chain";
 import UseChainWallet from "./pages/use-chain-wallet";
 import LedgerExample from "./pages/leger";
+import Mobile from "./pages/mobile";
+import CosmosWalletPage from "./pages/cosmos-wallet";
+import TestDisconnect from "./pages/test-disconnect";
 
 function Layout() {
   return <Outlet />;
@@ -20,6 +23,9 @@ export default function App() {
         <Route path="use-chain" element={<UseChain />} />
         <Route path="use-chain-wallet" element={<UseChainWallet />} />
         <Route path="ledger" element={<LedgerExample />} />
+        <Route path="mobile" element={<Mobile />} />
+        <Route path="cosmos-wallet" element={<CosmosWalletPage />} />
+        <Route path="test-disconnect" element={<TestDisconnect />} />
       </Route>
     </Routes>
   );

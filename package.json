@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "clean": "lerna run clean",
-    "build": "lerna run build --stream --ignore='@interchain-kit/vue-examples' --ignore='@interchain-kit/react-examples'",
+    "build": "lerna run build --stream --ignore='@interchain-kit/vue-examples' --ignore='@interchain-kit/react-examples' --ignore='@titan-kit/react-examples' --ignore='@interchain-kit/vanilla-examples'",
     "lint": "lerna run lint --parallel",
     "symlink": "symlink-workspace --logLevel error",
     "postinstall": "yarn symlink",

@@ -1,38 +1,43 @@
-import React, { useEffect, useRef } from "react";
-import { createContext, useContext } from "react";
+import { AssetList, Chain } from '@chain-registry/v2-types';
+import { ThemeProvider } from '@interchain-ui/react';
 import {
   BaseWallet,
-  SignerOptions,
   EndpointOptions,
+  SignerOptions,
   WalletManager,
-} from "@interchain-kit/core";
-import { AssetList, Chain } from "@chain-registry/v2-types";
-import { WalletModalProvider } from "./modal";
-import { createInterchainStore, InterchainStore } from "./store";
-import { StoreApi } from "zustand";
+} from '@titan-kit/core';
+// import type { UniversalProviderOpts } from '@walletconnect/universal-provider';
+import React, { ReactElement, useEffect, useRef } from 'react';
+import { createContext, useContext } from 'react';
+import { StoreApi } from 'zustand';
 
-type InterchainWalletContextType = StoreApi<InterchainStore>;
+import { ModalRenderer, WalletModalProps } from './modal';
+import { createTitanKitStore, TitanStore } from './store';
 
-type InterchainWalletProviderProps = {
+type TitanKitWalletContextType = StoreApi<TitanStore>;
+
+type TitanKitWalletProviderProps = {
   chains: Chain[];
   assetLists: AssetList[];
   wallets: BaseWallet[];
   signerOptions?: SignerOptions;
   endpointOptions?: EndpointOptions;
   children: React.ReactNode;
+  walletModal: (props: WalletModalProps) => ReactElement;
+  // wcMetadata?: UniversalProviderOpts['metadata'];
 };
 
-const InterchainWalletContext =
-  createContext<InterchainWalletContextType | null>(null);
+const TitanKitContext = createContext<TitanKitWalletContextType | null>(null);
 
-export const ChainProvider = ({
+export const TitanKitProvider = ({
   chains,
   assetLists,
   wallets,
   signerOptions,
   endpointOptions,
   children,
-}: InterchainWalletProviderProps) => {
+  walletModal: ProviderWalletModal,
+}: TitanKitWalletProviderProps) => {
   // const [_, forceRender] = useState({});
 
   const walletManager = new WalletManager(
@@ -43,7 +48,7 @@ export const ChainProvider = ({
     endpointOptions
   );
 
-  const store = useRef(createInterchainStore(walletManager));
+  const store = useRef(createTitanKitStore(walletManager));
 
   useEffect(() => {
     // walletManager.init();
@@ -51,17 +56,20 @@ export const ChainProvider = ({
   }, []);
 
   return (
-    <InterchainWalletContext.Provider value={store.current}>
-      <WalletModalProvider>{children}</WalletModalProvider>
-    </InterchainWalletContext.Provider>
+    <ThemeProvider>
+      <TitanKitContext.Provider value={store.current}>
+        {children}
+        <ModalRenderer walletModal={ProviderWalletModal} />
+      </TitanKitContext.Provider>
+    </ThemeProvider>
   );
 };
 
-export const useInterchainWalletContext = () => {
-  const context = useContext(InterchainWalletContext);
+export const useTitanKitContext = () => {
+  const context = useContext(TitanKitContext);
   if (!context) {
     throw new Error(
-      "useInterChainWalletContext must be used within a InterChainProvider"
+      'useTitanKitContext must be used within a TitanKitProvider'
     );
   }
   return context;

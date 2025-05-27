@@ -1,0 +1,273 @@
+# Configuration Guide
+
+This guide provides detailed information about configuring Interchain Kit in your application. You'll learn how to customize chains, wallets, RPC endpoints, and transaction signing options.
+
+## ChainProvider Configuration
+
+The `ChainProvider` is the central component that needs to be configured properly for Interchain Kit to work in your application. It accepts several properties that determine how your application will interact with blockchains and wallets.
+
+### Basic Configuration
+
+Here's a basic configuration example:
+
+```tsx
+import { ChainProvider, InterchainWalletModal } from "@interchain-kit/react";
+// Import wallets you want to support
+import { keplrWallet } from "@interchain-kit/keplr-extension";
+import { leapWallet } from "@interchain-kit/leap-extension";
+// Import chain data
+import { chains, assetLists } from "@chain-registry/v2";
+
+function App() {
+  return (
+    <ChainProvider
+      chains={chains}
+      wallets={[keplrWallet, leapWallet]}
+      assetLists={assetLists}
+      walletModal={InterchainWalletModal}
+    >
+      {/* Your application components */}
+    </ChainProvider>
+  );
+}
+```
+
+### Configuration Properties
+
+The `ChainProvider` accepts the following properties:
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `chains` | `Chain[]` | Yes | Array of chains to support in your application |
+| `wallets` | `BaseWallet[]` | Yes | Array of wallet adapters to support |
+| `assetLists` | `AssetList[]` | Yes | Array of asset lists containing token metadata |
+| `walletModal` | Component | Yes (React) | The modal component for wallet selection |
+| `signerOptions` | `SignerOptions` | No | Options for customizing transaction signing |
+| `endpointOptions` | `EndpointOptions` | No | Options for customizing RPC and REST endpoints |
+
+## Filtering Chains
+
+In most applications, you'll want to support only specific chains rather than all chains from the chain registry:
+
+```tsx
+// Filter chains by name
+const chainNames = ["osmosis", "cosmoshub", "juno"];
+const filteredChains = chains.filter(c => chainNames.includes(c.chainName));
+
+// Use the filtered chains in your ChainProvider
+<ChainProvider
+  chains={filteredChains}
+  assetLists={assetLists}
+  wallets={[keplrWallet, leapWallet]}
+  walletModal={InterchainWalletModal}
+>
+  {/* Your application components */}
+</ChainProvider>
+```
+
+## Configuring Wallets
+
+You can add various wallet adapters to support different wallets:
+
+```tsx
+import { keplrWallet } from "@interchain-kit/keplr-extension";
+import { leapWallet } from "@interchain-kit/leap-extension";
+import { cosmostationWallet } from "@interchain-kit/cosmostation-extension";
+import { ledgerWallet } from "@interchain-kit/ledger";
+import { WCWallet } from "@interchain-kit/core";
+
+// Initialize WalletConnect with custom metadata
+const walletConnect = new WCWallet(undefined, {
+  metadata: {
+    name: "My Interchain App",
+    description: "Application description",
+    url: "https://myapp.example",
+    icons: ["https://myapp.example/logo.png"],
+  },
+});
+
+// Use the wallets in your ChainProvider
+<ChainProvider
+  chains={filteredChains}
+  assetLists={assetLists}
+  wallets={[keplrWallet, leapWallet, cosmostationWallet, ledgerWallet, walletConnect]}
+  walletModal={InterchainWalletModal}
+>
+  {/* Your application components */}
+</ChainProvider>
+```
+
+## Advanced Configuration
+
+### Signer Options
+
+The `signerOptions` property allows you to customize transaction signing behavior for each chain:
+
+```tsx
+<ChainProvider
+  chains={filteredChains}
+  assetLists={assetLists}
+  wallets={[keplrWallet, leapWallet]}
+  walletModal={InterchainWalletModal}
+  signerOptions={{
+    // Configure signing options per chain
+    signing: (chainName) => {
+      if (chainName === "osmosis") {
+        return {
+          // Gas price for the osmosis chain
+          gasPrice: "0.025uosmo",
+          // Broadcasting options
+          broadcast: {
+            // Whether to check the transaction
+            checkTx: true,
+            // Whether to wait for delivery
+            deliverTx: true,
+            // Timeout in milliseconds
+            timeoutMs: 60000,
+          },
+        };
+      }
+      if (chainName === "cosmoshub") {
+        return {
+          gasPrice: "0.025uatom",
+        };
+      }
+      return undefined; // Use default options for other chains
+    },
+    // Specify preferred sign type per chain (amino or direct)
+    preferredSignType: (chainName) => {
+      return chainName === "osmosis" ? "direct" : "amino";
+    },
+  }}
+>
+  {/* Your application components */}
+</ChainProvider>
+```
+
+### Endpoint Options
+
+The `endpointOptions` property allows you to customize RPC and REST endpoints for each chain:
+
+```tsx
+<ChainProvider
+  chains={filteredChains}
+  assetLists={assetLists}
+  wallets={[keplrWallet, leapWallet]}
+  walletModal={InterchainWalletModal}
+  endpointOptions={{
+    endpoints: {
+      // Custom endpoints for the osmosis chain
+      'osmosis': {
+        rpc: ['https://rpc.osmosis.zone'],
+        rest: ['https://lcd.osmosis.zone']
+      },
+      // Custom endpoints for the cosmoshub chain
+      'cosmoshub': {
+        rpc: ['https://rpc.cosmos.network'],
+        rest: ['https://rest.cosmos.network']
+      }
+    },
+  }}
+>
+  {/* Your application components */}
+</ChainProvider>
+```
+
+## Supporting EVM Chains
+
+You can add support for Ethereum-compatible chains by creating custom chain objects:
+
+```tsx
+import { createChainFromEthereumChainInfo, createAssetListFromEthereumChainInfo } from './utils';
+
+// Define Ethereum chain info
+const goerliEthereumTestnet = {
+  chainId: "0x5", // Goerli Testnet Chain ID (in hex format)
+  chainName: "Goerli Testnet",
+  rpcUrls: ["https://rpc.goerli.mudit.blog/"],
+  nativeCurrency: {
+    name: "Goerli ETH",
+    symbol: "ETH",
+    decimals: 18,
+  },
+  blockExplorerUrls: ["https://goerli.etherscan.io"],
+};
+
+// Convert Ethereum chain info to Chain and AssetList objects
+const ethChain = createChainFromEthereumChainInfo(goerliEthereumTestnet);
+const ethAssets = createAssetListFromEthereumChainInfo(goerliEthereumTestnet);
+
+// Combine Cosmos and Ethereum chains
+const allChains = [...filteredChains, ethChain];
+const allAssets = [...filteredAssetLists, ethAssets];
+
+// Use the combined chains in your ChainProvider
+<ChainProvider
+  chains={allChains}
+  assetLists={allAssets}
+  wallets={[keplrWallet, leapWallet, metaMaskWallet]}
+  walletModal={InterchainWalletModal}
+>
+  {/* Your application components */}
+</ChainProvider>
+```
+
+## Vue Configuration
+
+For Vue applications, the configuration is similar but uses the Vue-specific components:
+
+```vue
+<script setup lang="ts">
+import { ChainProvider } from '@interchain-kit/vue';
+import { keplrWallet } from '@interchain-kit/keplr-extension';
+import { leapWallet } from '@interchain-kit/leap-extension';
+import { chain as osmosisChain, assetList as osmosisAssetList } from "@chain-registry/v2/mainnet/osmosis";
+import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "@chain-registry/v2/mainnet/cosmoshub";
+import { WCWallet } from "@interchain-kit/core";
+
+// Initialize WalletConnect
+const walletConnect = new WCWallet();
+</script>
+
+<template>
+  <ChainProvider 
+    :wallets="[keplrWallet, leapWallet, walletConnect]"
+    :chains="[osmosisChain, cosmoshubChain]"
+    :asset-lists="[osmosisAssetList, cosmoshubAssetList]"
+    :signer-options="{
+      signing: (chainName) => {
+        if (chainName === 'osmosis') {
+          return { gasPrice: '0.025uosmo' };
+        }
+        return undefined;
+      },
+      preferredSignType: (chainName) => {
+        return chainName === 'osmosis' ? 'direct' : 'amino';
+      }
+    }"
+    :endpoint-options="{
+      endpoints: {
+        'osmosis': {
+          rpc: ['https://rpc.osmosis.zone'],
+          rest: ['https://lcd.osmosis.zone']
+        }
+      }
+    }"
+  >
+    <!-- Your application components -->
+    <router-view />
+  </ChainProvider>
+</template>
+```
+
+## Best Practices
+
+1. **Filter Chains**: Only include the chains your application will actually use.
+2. **Custom Endpoints**: Consider providing custom endpoints for better performance or reliability.
+3. **Error Handling**: Implement error handling for cases where wallets are not installed or available.
+4. **Gas Customization**: Adjust gas prices and settings based on the specific chains you're interacting with.
+5. **Testing**: Test your configuration across different networks (mainnet, testnet) and with various wallets.
+
+## Next Steps
+
+After configuring Interchain Kit, you can start using the hooks and components to interact with wallets and blockchains. See the [Usage Guide](./usage) for more information on how to use Interchain Kit in your application.

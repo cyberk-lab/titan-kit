@@ -1,4 +1,2 @@
-
-
-export * from './chain-wallet'
-export * from './store'
+export * from './chain-wallet';
+export * from './store';

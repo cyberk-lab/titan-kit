@@ -1,9 +1,10 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { WalletModal } from "./modal";
-import { WalletState } from "@interchain-kit/core";
+
+import { WalletState } from "@titan-kit/core";
 import { useChainWallet, useWalletManager } from "../hooks";
 import { Wallet as InterchainUIWalletType } from "@interchain-ui/react";
 import { transferToWalletUISchema } from "../utils";
+import { InterchainWalletModal } from "./modal";
 
 type WalletModalContextType = {
   modalIsOpen: boolean;
@@ -68,7 +69,7 @@ export const WalletModalProvider = ({
   return (
     <WalletModalContext.Provider value={{ modalIsOpen, open, close }}>
       {children}
-      <WalletModal
+      <InterchainWalletModal
         shouldShowList={shouldShowList}
         username={username}
         address={address}
@@ -78,7 +79,7 @@ export const WalletModalProvider = ({
         close={handleCloseModal}
         wallets={walletsForUI}
         walletConnectQRCodeUri={walletConnectQRCodeUri}
-        currentWallet={wallet?.originalWallet}
+        currentWallet={wallet}
         isConnecting={status === WalletState.Connecting}
         isConnected={status === WalletState.Connected}
         isRejected={status === WalletState.Rejected}

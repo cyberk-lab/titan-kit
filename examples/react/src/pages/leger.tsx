@@ -1,4 +1,4 @@
-import { useChain } from "@interchain-kit/react";
+import { useChain } from "@titan-kit/react";
 
 const LedgerExample = () => {
   const juno = useChain("juno");

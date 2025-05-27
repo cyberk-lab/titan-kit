@@ -1,20 +1,14 @@
 {
   "lerna": "6",
-  "conventionalCommits": true,
+  "conventionalCommits": false,
   "npmClient": "yarn",
-  "npmClientArgs": [
-    "--no-lockfile"
-  ],
-  "packages": [
-    "packages/*",
-    "wallets/*",
-    "examples/*"
-  ],
-  "version": "independent",
+  "npmClientArgs": ["--no-lockfile"],
+  "packages": ["packages/*", "wallets/*", "examples/*"],
+  "version": "0.0.4-alpha.0",
   "registry": "https://registry.npmjs.org",
   "command": {
     "create": {
-      "homepage": "https://github.com/hyperweb-io/interchain-kit",
+      "homepage": "https://github.com/cyberk-vn/titan-kit",
       "license": "SEE LICENSE IN LICENSE",
       "access": "restricted"
     },

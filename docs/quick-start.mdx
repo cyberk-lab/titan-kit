@@ -1,0 +1,245 @@
+# Quick Start Guide
+
+Get up and running with Interchain Kit in just a few minutes. This guide covers the essential steps to integrate Interchain Kit into your application and start connecting to blockchain wallets.
+
+## Creating a New Project
+
+The easiest way to get started is by using our `create-interchain-app` tool:
+
+```bash
+# Using npm
+npm create interchain-app
+
+# Using Yarn
+yarn create interchain-app
+```
+
+Follow the prompts to configure your new project with the framework of your choice (React or Vue).
+
+## Setting Up Interchain Kit Manually
+
+If you prefer to add Interchain Kit to an existing project, follow these steps:
+
+### 1. Install Required Packages
+
+First, install the core package and your framework-specific package:
+
+#### For React Applications
+
+```bash
+npm install @interchain-kit/core @interchain-kit/react @chain-registry/v2
+# Install some wallet adapters
+npm install @interchain-kit/keplr-extension @interchain-kit/leap-extension
+```
+
+#### For Vue Applications
+
+```bash
+npm install @interchain-kit/core @interchain-kit/vue @chain-registry/v2
+# Install some wallet adapters
+npm install @interchain-kit/keplr-extension @interchain-kit/leap-extension
+```
+
+### 2. Set Up the ChainProvider
+
+#### React Setup
+
+```tsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+import { ChainProvider } from "@interchain-kit/react";
+// Import wallet adapters
+import { keplrWallet } from "@interchain-kit/keplr-extension";
+import { leapWallet } from "@interchain-kit/leap-extension";
+// Import chain registry data
+import { chains, assetLists } from "@chain-registry/v2";
+
+// Filter to include only the chains you want to support
+const chainNames = ["osmosis", "cosmoshub", "juno"];
+const filteredChains = chains.filter(c => chainNames.includes(c.chainName));
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <ChainProvider
+      wallets={[keplrWallet, leapWallet]}
+      chains={filteredChains}
+      assetLists={assetLists}
+      signerOptions={{}}
+      endpointOptions={{}}
+    >
+      <App />
+    </ChainProvider>
+  </React.StrictMode>
+);
+```
+
+#### Vue Setup
+
+```vue
+<!-- App.vue -->
+<script setup lang="ts">
+import { ChainProvider } from '@interchain-kit/vue';
+import { keplrWallet } from '@interchain-kit/keplr-extension';
+import { leapWallet } from '@interchain-kit/leap-extension';
+import { chain as osmosisChain, assetList as osmosisAssetList } from "@chain-registry/v2/mainnet/osmosis";
+import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "@chain-registry/v2/mainnet/cosmoshub";
+import { chain as junoChain, assetList as junoAssetList } from "@chain-registry/v2/mainnet/juno";
+</script>
+
+<template>
+  <ChainProvider 
+    :wallets="[keplrWallet, leapWallet]"
+    :chains="[osmosisChain, cosmoshubChain, junoChain]"
+    :asset-lists="[osmosisAssetList, cosmoshubAssetList, junoAssetList]"
+    :signer-options="{}"
+    :endpoint-options="{}">
+    <!-- Your application content -->
+    <router-view />
+  </ChainProvider>
+</template>
+```
+
+## Connecting to Wallets
+
+### React: Using the Wallet Modal
+
+Add the `InterchainWalletModal` component to display a predefined wallet selection modal:
+
+```tsx
+import { InterchainWalletModal, useWalletModal } from "@interchain-kit/react";
+
+function MyComponent() {
+  const { isOpen, open, close } = useWalletModal();
+
+  return (
+    <>
+      <button onClick={open}>Connect Wallet</button>
+      <InterchainWalletModal />
+    </>
+  );
+}
+```
+
+### Vue: Using the Wallet Modal
+
+```vue
+<script setup lang="ts">
+import { InterchainWalletModal, OPEN_MODAL_KEY, CLOSE_MODAL_KEY } from '@interchain-kit/vue';
+import { inject } from 'vue';
+
+const openModal = inject(OPEN_MODAL_KEY);
+const closeModal = inject(CLOSE_MODAL_KEY);
+</script>
+
+<template>
+  <button @click="openModal">Connect Wallet</button>
+  <InterchainWalletModal />
+</template>
+```
+
+## Working with Chains and Wallets
+
+### Using the useChain Hook (React)
+
+```tsx
+import { useChain } from "@interchain-kit/react";
+
+function WalletInfo() {
+  // Use a specific chain
+  const { address, wallet, status, connect, disconnect } = useChain("osmosis");
+  
+  return (
+    <div>
+      <p>Status: {status}</p>
+      <p>Address: {address}</p>
+      <p>Wallet: {wallet?.info?.prettyName}</p>
+      <button onClick={connect}>Connect</button>
+      <button onClick={disconnect}>Disconnect</button>
+    </div>
+  );
+}
+```
+
+### Using the useChain Hook (Vue)
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useChain } from '@interchain-kit/vue';
+
+const chainName = ref('osmosis');
+const { address, wallet, status, connect, disconnect } = useChain(chainName);
+</script>
+
+<template>
+  <div>
+    <p>Status: {{ status }}</p>
+    <p>Address: {{ address }}</p>
+    <p>Wallet: {{ wallet?.info?.prettyName }}</p>
+    <button @click="connect">Connect</button>
+    <button @click="disconnect">Disconnect</button>
+  </div>
+</template>
+```
+
+## Working with a Specific Chain and Wallet
+
+### Using the useChainWallet Hook (React)
+
+```tsx
+import { useChainWallet } from "@interchain-kit/react";
+
+function SpecificWalletInfo() {
+  // Use a specific chain and wallet
+  const { address, status, connect, disconnect } = useChainWallet(
+    "osmosis",
+    "keplr"
+  );
+  
+  return (
+    <div>
+      <p>Chain: osmosis</p>
+      <p>Wallet: keplr</p>
+      <p>Status: {status}</p>
+      <p>Address: {address}</p>
+      <button onClick={connect}>Connect</button>
+      <button onClick={disconnect}>Disconnect</button>
+    </div>
+  );
+}
+```
+
+### Using the useChainWallet Hook (Vue)
+
+```vue
+<script setup lang="ts">
+import { useChainWallet } from '@interchain-kit/vue';
+
+const { address, status, connect, disconnect } = useChainWallet('osmosis', 'keplr');
+</script>
+
+<template>
+  <div>
+    <p>Chain: osmosis</p>
+    <p>Wallet: keplr</p>
+    <p>Status: {{ status }}</p>
+    <p>Address: {{ address }}</p>
+    <button @click="connect">Connect</button>
+    <button @click="disconnect">Disconnect</button>
+  </div>
+</template>
+```
+
+
+
+## Next Steps
+
+Now that you have Interchain Kit set up and working with wallets, you can:
+
+1. Learn more about [InterchainJS hooks](https://docs.hyperweb.io/interchain-kit/hooks) for transaction signing
+2. Explore [Interchain UI](https://github.com/hyperweb-io/interchain-ui) for beautiful, ready-to-use components
+3. Check the [API documentation](https://docs.hyperweb.io/interchain-kit/api) for detailed information about available methods and hooks
+
+For a complete example, visit our [example applications](https://github.com/hyperweb-io/interchain-kit/tree/main/examples) on GitHub.

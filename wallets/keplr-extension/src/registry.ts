@@ -1,5 +1,5 @@
 
-import { Wallet } from '@interchain-kit/core';
+import { Wallet } from '@titan-kit/core';
 import { ICON } from './constant';
 
 export const keplrExtensionInfo: Wallet = {
@@ -26,4 +26,13 @@ export const keplrExtensionInfo: Wallet = {
       link: 'https://www.keplr.app/download',
     },
   ],
+  walletconnect: {
+    name: 'Keplr',
+    projectId: '6adb6082c909901b9e7189af3a4a0223102cd6f8d5c39e39f3d49acb92b578bb'
+  },
+  walletConnectLink: {
+    android: `intent://wcV2?{wc-uri}#Intent;package=com.chainapsis.keplr;scheme=keplrwallet;end;`,
+    // android: `keplrwallet://wcV2?{wc-uri}`,
+    ios: `keplrwallet://wcV2?{wc-uri}`
+  }
 };

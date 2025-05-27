@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useChain, useWalletManager } from "@interchain-kit/react";
+import { useChain, useWalletManager } from "@titan-kit/react";
 import { Chain } from "@chain-registry/v2-types";
 
 const UseChain = () => {

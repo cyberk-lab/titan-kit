@@ -1,7 +1,7 @@
 import { ConnectModalHead, ConnectModalStatus } from "@interchain-ui/react";
 import { useWalletManager } from "../../hooks"; // replace with the actual path
 import { useWalletModal } from "../provider";
-import { BaseWallet, DownloadInfo } from "@interchain-kit/core";
+import { BaseWallet, DownloadInfo } from "@titan-kit/core";
 import { useMemo } from "react";
 import { FaAndroid } from "@react-icons/all-files/fa/FaAndroid";
 import { GoDesktopDownload } from "@react-icons/all-files/go/GoDesktopDownload";

@@ -1,12 +1,12 @@
 {
-  "name": "interchain-kit",
-  "version": "0.2.219",
-  "author": "Hyperweb <developers@hyperweb.io>",
+  "name": "titan-kit",
+  "version": "0.0.4-alpha.0",
+  "author": "BangBu <68235687+bangbu10820@users.noreply.github.com>",
   "description": "Universal wallet connector for the interchain",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
-  "homepage": "https://github.com/hyperweb-io/interchain-kit",
+  "homepage": "https://github.com/titan-kit/titan-kit",
   "license": "SEE LICENSE IN LICENSE",
   "publishConfig": {
     "access": "public",
@@ -14,10 +14,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hyperweb-io/interchain-kit"
+    "url": "https://github.com/titan-kit/titan-kit"
   },
   "bugs": {
-    "url": "https://github.com/hyperweb-io/interchain-kit/issues"
+    "url": "https://github.com/titan-kit/titan-kit/issues"
   },
   "scripts": {
     "copy": "copyfiles -f ../../LICENSE README.md package.json dist",
@@ -29,5 +29,5 @@
     "test:watch": "jest --watch"
   },
   "keywords": [],
-  "gitHead": "f7c6e9d67ed0a788fb8b37359adfbc09df2f69a2"
+  "gitHead": "35337e4470a0594ba644d31be8e24c8e295296f6"
 }

@@ -2,7 +2,7 @@ import {
   useChain,
   useWalletManager,
   useWalletModal,
-} from "@interchain-kit/react";
+} from "@titan-kit/react";
 import { useState } from "react";
 
 const hwChain = {

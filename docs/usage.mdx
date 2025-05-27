@@ -1,0 +1,417 @@
+# Using Interchain Kit
+
+This guide covers the detailed usage of Interchain Kit, showing you how to work with different hooks, connect to wallets, access blockchain data, and perform transactions.
+
+## Core Concepts
+
+Before diving into the code examples, here are some key concepts to understand:
+
+- **ChainProvider**: The main provider component that wraps your application and provides access to chains and wallets
+- **Chains**: Blockchain networks with which your application can interact
+- **Wallets**: Interfaces that allow users to access their accounts and sign transactions
+- **Hooks**: React/Vue composables that provide functionality for interacting with chains and wallets
+
+## React Hooks
+
+### useChain
+
+The `useChain` hook allows you to work with a specific blockchain:
+
+```tsx
+import { useChain } from '@interchain-kit/react';
+
+function ChainComponent() {
+  // Access data and functions for the specified chain
+  const {
+    logoUrl,         // Chain logo URL
+    address,         // User's address on this chain
+    status,          // Connection status ('Connected', 'Connecting', 'Disconnected', etc.)
+    username,        // User's name (if available)
+    wallet,          // Current wallet object
+    rpcEndpoint,     // RPC endpoint for the chain
+    connect,         // Function to connect to the chain
+    disconnect,      // Function to disconnect from the chain
+    openView         // Function to open wallet view
+  } = useChain('osmosis');
+  
+  return (
+    <div>
+      <div>Connection Status: {status}</div>
+      {status === 'Connected' ? (
+        <>
+          <div>Address: {address}</div>
+          <button onClick={disconnect}>Disconnect</button>
+        </>
+      ) : (
+        <button onClick={connect}>Connect</button>
+      )}
+    </div>
+  );
+}
+```
+
+### useChainWallet
+
+The `useChainWallet` hook is used to interact with a specific chain through a specific wallet:
+
+```tsx
+import { useChainWallet } from '@interchain-kit/react';
+
+function ChainWalletComponent() {
+  // Access data and functions for a specific chain and wallet combination
+  const {
+    address,
+    connect,
+    disconnect,
+    status,
+    signingClient,      // Signing client for transactions
+    isSigningClientLoading,
+    assetList           // List of assets on the chain
+  } = useChainWallet('juno', 'keplr-extension');
+  
+  return (
+    <div>
+      <div>Wallet: Keplr</div>
+      <div>Chain: Juno</div>
+      <div>Status: {status}</div>
+      <div>Address: {address}</div>
+      <button onClick={connect}>Connect</button>
+      <button onClick={disconnect}>Disconnect</button>
+    </div>
+  );
+}
+```
+
+### useWalletManager
+
+The `useWalletManager` hook gives you access to the wallet manager instance, allowing you to interact with all available wallets and chains:
+
+```tsx
+import { useWalletManager } from '@interchain-kit/react';
+import { Chain } from '@chain-registry/v2-types';
+
+function WalletManagerComponent() {
+  const walletManager = useWalletManager();
+  
+  return (
+    <div>
+      <h2>Available Chains</h2>
+      <ul>
+        {walletManager.chains.map((chain: Chain) => (
+          <li key={chain.chainId}>{chain.chainName}</li>
+        ))}
+      </ul>
+      
+      <h2>Available Wallets</h2>
+      <ul>
+        {walletManager.wallets.map((wallet) => (
+          <li key={wallet.info?.name}>{wallet.info?.prettyName}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+### useWalletModal
+
+The `useWalletModal` hook controls the built-in wallet modal for connecting and switching wallets:
+
+```tsx
+import { useWalletModal } from '@interchain-kit/react';
+import { InterchainWalletModal } from '@interchain-kit/react';
+
+function WalletModalComponent() {
+  const { isOpen, open, close } = useWalletModal();
+  
+  return (
+    <>
+      <button onClick={open}>Select Wallet</button>
+      <InterchainWalletModal />
+    </>
+  );
+}
+```
+
+## Vue Composables
+
+### useChain
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useChain } from '@interchain-kit/vue';
+
+const chainName = ref('cosmoshub');
+const { 
+  address, 
+  wallet, 
+  logoUrl, 
+  connect, 
+  disconnect,
+  status 
+} = useChain(chainName);
+</script>
+
+<template>
+  <div>
+    <div>Connection Status: {{ status }}</div>
+    <div v-if="status === 'Connected'">
+      <div>Address: {{ address }}</div>
+      <button @click="disconnect">Disconnect</button>
+    </div>
+    <button v-else @click="connect">Connect</button>
+  </div>
+</template>
+```
+
+### useChainWallet
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useChainWallet } from '@interchain-kit/vue';
+
+const chainName = ref('juno');
+const walletName = ref('keplr-extension');
+const { 
+  address, 
+  connect, 
+  disconnect, 
+  status,
+  signingClient, 
+  isSigningClientLoading 
+} = useChainWallet(chainName, walletName);
+</script>
+
+<template>
+  <div>
+    <div>Wallet: Keplr</div>
+    <div>Chain: Juno</div>
+    <div>Status: {{ status }}</div>
+    <div>Address: {{ address }}</div>
+    <button @click="connect.value()">Connect</button>
+    <button @click="disconnect.value()">Disconnect</button>
+  </div>
+</template>
+```
+
+### Using the Wallet Modal in Vue
+
+```vue
+<script setup lang="ts">
+import { inject } from 'vue';
+import { InterchainWalletModal, OPEN_MODAL_KEY } from '@interchain-kit/vue';
+
+const openModal = inject(OPEN_MODAL_KEY);
+</script>
+
+<template>
+  <button @click="openModal">Select Wallet</button>
+  <InterchainWalletModal />
+</template>
+```
+
+## Working with Signers and Transactions
+
+Interchain Kit provides access to signing clients for executing transactions on the blockchain:
+
+```tsx
+import { useChainWallet } from '@interchain-kit/react'; // or '@interchain-kit/vue'
+import { coins } from '@cosmjs/amino';
+
+function TransactionComponent() {
+  const { 
+    address, 
+    signingClient, 
+    isSigningClientLoading, 
+    status 
+  } = useChainWallet('osmosis', 'keplr-extension');
+
+  const sendTokens = async () => {
+    if (!signingClient || isSigningClientLoading || status !== 'Connected') {
+      return;
+    }
+
+    try {
+      // Example: Send tokens using CosmJS (with InterchainJS)
+      const result = await signingClient.sendTokens(
+        address,                // from address (current connected wallet)
+        'recipient-address',    // to address
+        coins('1000000', 'uosmo'), // amount
+        'memo'                  // optional memo
+      );
+      
+      console.log('Transaction result:', result);
+    } catch (error) {
+      console.error('Transaction failed:', error);
+    }
+  };
+
+  return (
+    <div>
+      <button 
+        onClick={sendTokens} 
+        disabled={isSigningClientLoading || status !== 'Connected'}
+      >
+        Send Tokens
+      </button>
+    </div>
+  );
+}
+```
+
+## Querying Account Balances
+
+You can query account balances using the RPC endpoint:
+
+```tsx
+import { useChainWallet } from '@interchain-kit/react'; // or '@interchain-kit/vue'
+import { getBalance } from 'interchainjs/cosmos/bank/v1beta1/query.rpc.func';
+import { useState } from 'react';
+
+function BalanceComponent() {
+  const { address, status, rpcEndpoint } = useChainWallet('osmosis', 'keplr-extension');
+  const [balance, setBalance] = useState<string>();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchBalance = async () => {
+    if (status !== 'Connected' || !rpcEndpoint) return;
+    
+    setIsLoading(true);
+    try {
+      const result = await getBalance(rpcEndpoint as string, {
+        address,
+        denom: 'uosmo',
+      });
+      setBalance(result.balance.amount);
+    } catch (error) {
+      console.error('Failed to fetch balance:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={fetchBalance} disabled={isLoading || status !== 'Connected'}>
+        {isLoading ? 'Loading...' : 'Fetch Balance'}
+      </button>
+      {balance && <div>Balance: {balance} uosmo</div>}
+    </div>
+  );
+}
+```
+
+## Supporting EVM Chains
+
+Interchain Kit also supports Ethereum-compatible chains through EthereumWallet:
+
+```tsx
+import { useChainWallet } from '@interchain-kit/react'; // or '@interchain-kit/vue'
+import { ethers } from 'ethers';
+
+function EVMComponent() {
+  const { address, status, wallet } = useChainWallet('ethereum', 'metamask-extension');
+
+  const getEthBalance = async () => {
+    if (status !== 'Connected') return;
+    
+    // Get Ethereum provider
+    const provider = await wallet.getProvider('1'); // Chain ID for Ethereum mainnet
+    const ethProvider = new ethers.providers.Web3Provider(provider);
+    
+    // Get balance
+    const balance = await ethProvider.getBalance(address);
+    
+    console.log('ETH Balance:', ethers.utils.formatEther(balance));
+  };
+
+  return (
+    <div>
+      <button onClick={getEthBalance} disabled={status !== 'Connected'}>
+        Get ETH Balance
+      </button>
+    </div>
+  );
+}
+```
+
+## Using WalletConnect
+
+Interchain Kit supports WalletConnect for mobile wallet connections:
+
+```tsx
+import { WCWallet } from '@interchain-kit/core';
+import { ChainProvider } from '@interchain-kit/react'; // or '@interchain-kit/vue'
+
+// Setup WalletConnect with custom metadata
+const walletConnect = new WCWallet(undefined, {
+  metadata: {
+    name: "My Interchain App",
+    description: "Application description",
+    url: "https://myapp.example",
+    icons: ["https://myapp.example/logo.png"],
+  },
+});
+
+function AppWithWalletConnect() {
+  return (
+    <ChainProvider
+      wallets={[keplrWallet, leapWallet, walletConnect]}
+      chains={chains}
+      assetLists={assetLists}
+    >
+      {/* Your app components */}
+    </ChainProvider>
+  );
+}
+```
+
+## Best Practices
+
+1. **Error Handling**: Always implement proper error handling for wallet connections and transactions
+2. **Loading States**: Show loading states during wallet connections and transactions
+3. **Responsive Design**: Make sure your UI is responsive and works well on both desktop and mobile
+4. **Security**: Never store private keys or sensitive data in your application
+5. **Testing**: Test your application with multiple wallets and on different networks
+
+## Advanced Configuration
+
+For advanced configuration options, you can provide additional options to the ChainProvider:
+
+```tsx
+<ChainProvider
+  wallets={[keplrWallet, leapWallet]}
+  chains={chains}
+  assetLists={assetLists}
+  signerOptions={{
+    signingStargate: () => {
+      return {
+        gasPrice: GasPrice.fromString('0.0025uatom'),
+      };
+    },
+    signingCosmwasm: () => {
+      return {
+        gasPrice: GasPrice.fromString('0.0025uatom'),
+      };
+    },
+  }}
+  endpointOptions={{
+    endpoints: {
+      osmosis: {
+        rpc: ['https://custom-rpc.osmosis.zone'],
+        rest: ['https://custom-rest.osmosis.zone'],
+      },
+    },
+  }}
+>
+  {/* Your app components */}
+</ChainProvider>
+```
+
+## Further Resources
+
+- [InterchainJS Documentation](https://docs.hyperweb.io/interchainjs)
+- [Chain Registry Documentation](https://github.com/hyperweb-io/chain-registry)
+- [Example Applications](https://github.com/hyperweb-io/interchain-kit/tree/main/examples)

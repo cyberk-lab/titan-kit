@@ -1,4 +1,4 @@
-# @interchain-kit/react
+# @titan-kit/react
 
 <p align="center" width="100%">
     <img height="90" src="https://user-images.githubusercontent.com/545047/190171432-5526db8f-9952-45ce-a745-bea4302f912b.svg" />
@@ -22,19 +22,19 @@
 ## Install
 Using npm:
 ```sh
-npm install @interchain-kit/react
+npm install @titan-kit/react
 ```
 Using yarn:
 ```sh
-yarn add @interchain-kit/react
+yarn add @titan-kit/react
 ```
 
 ## Usage
 ### Setup
 #### import chain registry info that you need
 ```js
-import { ChainProvider, useChain } from "@interchain-kit/react";
-import { keplrWallet } from "@interchain-kit/keplr-extension";
+import { ChainProvider, useChain } from "@titan-kit/react";
+import { keplrWallet } from "@titan-kit/keplr-extension";
 import { ThemeProvider } from "@interchain-ui/react";
 import "@interchain-ui/react/styles";
 
@@ -69,8 +69,8 @@ export default App;
 
 #### or import all chain registry
 ```js
-import { ChainProvider, useChain } from "@interchain-kit/react";
-import { keplrWallet } from "@interchain-kit/keplr-extension";
+import { ChainProvider, useChain } from "@titan-kit/react";
+import { keplrWallet } from "@titan-kit/keplr-extension";
 import { ThemeProvider } from "@interchain-ui/react";
 import "@interchain-ui/react/styles";
 import { chains, assetLists } from '@chain-registry/v2/mainnet'
@@ -118,8 +118,8 @@ console.log(address) // address for cosmoshub in keplr-extension wallet
 ```js
 import { chain as junoChain, assetList as junoAssetList } from "@chain-registry/v2/mainnet/juno";
 import { chain as stargazeChain,assetList as stargazeAssetList } from "@chain-registry/v2/mainnet/stargaze";
-import { keplrWallet } from "@interchain-kit/keplr-extension";
-import { leapWallet } from "@interchain-kit/leap-extension";
+import { keplrWallet } from "@titan-kit/keplr-extension";
+import { leapWallet } from "@titan-kit/leap-extension";
 
 const Show = () => {
   const juno = useChainWallet('juno', 'keplr-extension')
@@ -190,7 +190,7 @@ A unified toolkit for building applications and smart contracts in the Interchai
 |----------------------|------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
 | **Chain Information**   | [**Chain Registry**](https://github.com/hyperweb-io/chain-registry), [**Utils**](https://www.npmjs.com/package/@chain-registry/utils), [**Client**](https://www.npmjs.com/package/@chain-registry/client) | Everything from token symbols, logos, and IBC denominations for all assets you want to support in your application. |
 | **Wallet Connectors**| [**Interchain Kit**](https://github.com/hyperweb-io/interchain-kit)<sup>beta</sup>, [**Cosmos Kit**](https://github.com/hyperweb-io/cosmos-kit) | Experience the convenience of connecting with a variety of web3 wallets through a single, streamlined interface. |
-| **Signing Clients**          | [**InterchainJS**](https://github.com/hyperweb-io/interchainjs)<sup>beta</sup>, [**CosmJS**](https://github.com/cosmos/cosmjs) | A single, universal signing interface for any network |
+| **Signing Clients**          | [**TitanJS**](https://github.com/cyberk-lab/titanjs)<sup>beta</sup>, [**CosmJS**](https://github.com/cosmos/cosmjs) | A single, universal signing interface for any network |
 | **SDK Clients**              | [**Telescope**](https://github.com/hyperweb-io/telescope)                                                          | Your Frontend Companion for Building with TypeScript with Cosmos SDK Modules. |
 | **Starter Kits**     | [**Create Interchain App**](https://github.com/hyperweb-io/create-interchain-app)<sup>beta</sup>, [**Create Cosmos App**](https://github.com/hyperweb-io/create-cosmos-app) | Set up a modern Interchain app by running one command. |
 | **UI Kits**          | [**Interchain UI**](https://github.com/hyperweb-io/interchain-ui)                                                   | The Interchain Design System, empowering developers with a flexible, easy-to-use UI kit. |

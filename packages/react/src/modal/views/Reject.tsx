@@ -2,7 +2,7 @@ import { ConnectModalHead, ConnectModalStatus } from "@interchain-ui/react";
 import { useWalletModal } from "../provider";
 import { useWalletManager } from "../../hooks";
 import { getWalletInfo } from "../../utils";
-import { BaseWallet } from "@interchain-kit/core";
+import { BaseWallet } from "@titan-kit/core";
 
 export const RejectHeader = ({
   wallet,

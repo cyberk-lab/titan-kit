@@ -1,15 +1,17 @@
-
 import { AssetList, Chain } from '@chain-registry/v2-types';
+
 import { SignType, Wallet, WalletAccount } from '../types';
+import { isInstanceOf } from '../utils';
 import { BaseWallet } from './base-wallet';
 import { CosmosWallet } from './cosmos-wallet';
-import { isInstanceOf } from '../utils';
 
 export class MultiChainWallet extends BaseWallet {
+  networkWalletMap: Map<Chain['chainType'], BaseWallet> = new Map();
 
-  networkWalletMap: Map<Chain['chainType'], BaseWallet> = new Map()
-
-  constructor(info?: Wallet, networkWalletMap?: Map<Chain['chainType'], BaseWallet>) {
+  constructor(
+    info?: Wallet,
+    networkWalletMap?: Map<Chain['chainType'], BaseWallet>
+  ) {
     super(info);
 
     // this.networkWalletMap.set('cosmos', new CosmosWallet(info));
@@ -20,7 +22,7 @@ export class MultiChainWallet extends BaseWallet {
         if (this.networkWalletMap.has(key)) {
           this.networkWalletMap.set(key, wallet);
         }
-      })
+      });
     }
   }
 
@@ -29,34 +31,34 @@ export class MultiChainWallet extends BaseWallet {
   }
 
   setChainMap(chains: Chain[]): void {
-    this.chainMap = new Map(chains.map(chain => [chain.chainId, chain]))
-    this.networkWalletMap.forEach(wallet => {
-      wallet.setChainMap(chains)
-    })
+    this.chainMap = new Map(chains.map((chain) => [chain.chainId, chain]));
+    this.networkWalletMap.forEach((wallet) => {
+      wallet.setChainMap(chains);
+    });
   }
 
   addChain(chain: Chain): void {
     this.chainMap.set(chain.chainId, chain);
-    this.networkWalletMap.forEach(wallet => {
-      wallet.addChain(chain)
-    })
+    this.networkWalletMap.forEach((wallet) => {
+      wallet.addChain(chain);
+    });
   }
 
   setAssetLists(assetLists: AssetList[]): void {
-    this.networkWalletMap.forEach(wallet => {
-      wallet.setAssetLists(assetLists)
-    })
+    this.networkWalletMap.forEach((wallet) => {
+      wallet.setAssetLists(assetLists);
+    });
   }
 
   async init(): Promise<void> {
     const wallets = Array.from(this.networkWalletMap.values());
 
-    await Promise.all(wallets.map(async wallet => wallet.init()))
+    await Promise.all(wallets.map(async (wallet) => wallet.init()));
   }
   getWalletByChainType(chainType: Chain['chainType']) {
     const wallet = this.networkWalletMap.get(chainType);
     if (!wallet) {
-      throw new Error('Unsupported chain type')
+      throw new Error(`Unsupported chain type: "${chainType}"`);
     }
     return wallet;
   }
@@ -74,7 +76,7 @@ export class MultiChainWallet extends BaseWallet {
     const chain = this.getChainById(chainId);
     const networkWallet = this.getWalletByChainType(chain.chainType);
     if (!networkWallet) {
-      return Promise.reject(new Error('Unsupported chain type'))
+      return Promise.reject(new Error('Unsupported chain type'));
     }
     return networkWallet.getAccount(chainId);
   }

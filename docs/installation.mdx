@@ -1,0 +1,184 @@
+# Installing Interchain Kit
+
+This guide will walk you through the process of installing and setting up Interchain Kit for your project.
+
+## Prerequisites
+
+Before you begin, ensure you have the following:
+
+- Node.js (v16 or higher)
+- npm (v7 or higher) or Yarn
+- A modern web development environment
+
+## Basic Installation
+
+You can install Interchain Kit using npm or Yarn:
+
+```bash
+# Using npm
+npm install @interchain-kit/core
+
+# Using Yarn
+yarn add @interchain-kit/core
+```
+
+## Framework-specific Installation
+
+### React
+
+For React applications, you'll need to install the React-specific package:
+
+```bash
+# Using npm
+npm install @interchain-kit/react @interchain-kit/core
+
+# Using Yarn
+yarn add @interchain-kit/react @interchain-kit/core
+```
+
+### Vue
+
+For Vue applications:
+
+```bash
+# Using npm
+npm install @interchain-kit/vue @interchain-kit/core
+
+# Using Yarn
+yarn add @interchain-kit/vue @interchain-kit/core
+```
+
+## Installing Wallet Adapters
+
+Interchain Kit supports various wallets. Install the adapters for the wallets you want to support:
+
+```bash
+# Install common wallet adapters
+npm install @interchain-kit/keplr-extension @interchain-kit/leap-extension @interchain-kit/cosmostation-extension
+
+# For Ledger support
+npm install @interchain-kit/ledger
+```
+
+## Additional Dependencies
+
+You'll also need to install Chain Registry for chain information:
+
+```bash
+npm install @chain-registry/v2
+```
+
+For UI components, you can install Interchain UI (optional but recommended):
+
+```bash
+# For React
+npm install @interchain-ui/react
+
+# For Vue
+npm install @interchain-ui/vue
+```
+
+## Quick Setup with create-interchain-app
+
+The easiest way to get started is by using the create-interchain-app tool, which sets up a complete project with all necessary dependencies:
+
+```bash
+# Using npm
+npm create interchain-app
+
+# Using Yarn
+yarn create interchain-app
+```
+
+Follow the prompts to select your preferred framework (React or Vue) and configure your app.
+
+## Basic Configuration
+
+### React Configuration
+
+```tsx
+// In your main application file (e.g., App.tsx or main.tsx)
+import { ChainProvider, InterchainWalletModal } from "@interchain-kit/react";
+import { keplrWallet } from "@interchain-kit/keplr-extension";
+import { leapWallet } from "@interchain-kit/leap-extension";
+import { WCWallet } from "@interchain-kit/core";
+import { chains, assetLists } from "@chain-registry/v2";
+
+// Optional UI components
+import { ThemeProvider } from "@interchain-ui/react";
+import "@interchain-ui/react/styles";
+
+// Initialize WalletConnect (optional)
+const walletConnect = new WCWallet(undefined, {
+  metadata: {
+    name: "My Interchain App",
+    description: "Application description",
+    url: "https://myapp.example",
+    icons: ["https://myapp.example/logo.png"],
+  },
+});
+
+// Filter chains you want to support
+const chainNames = ["osmosis", "cosmoshub", "juno"];
+const filteredChains = chains.filter(c => chainNames.includes(c.chainName));
+
+function App() {
+  return (
+    <ThemeProvider>
+      <ChainProvider
+        wallets={[keplrWallet, leapWallet, walletConnect]}
+        chains={filteredChains}
+        assetLists={assetLists}
+        signerOptions={{}}
+        endpointOptions={{}}
+      >
+        <InterchainWalletModal />
+        {/* Your application components */}
+      </ChainProvider>
+    </ThemeProvider>
+  );
+}
+```
+
+### Vue Configuration
+
+```vue
+<!-- In your App.vue file -->
+<script setup lang="ts">
+import { ThemeProvider } from '@interchain-ui/vue';
+import { ChainProvider } from '@interchain-kit/vue';
+import { keplrWallet } from '@interchain-kit/keplr-extension';
+import { leapWallet } from '@interchain-kit/leap-extension';
+import { WCWallet } from "@interchain-kit/core";
+import { chain as osmosisChain, assetList as osmosisAssetList } from "@chain-registry/v2/mainnet/osmosis";
+import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "@chain-registry/v2/mainnet/cosmoshub";
+
+// Initialize WalletConnect (optional)
+const walletConnect = new WCWallet();
+</script>
+
+<template>
+  <ThemeProvider>
+    <ChainProvider 
+      :wallets="[keplrWallet, leapWallet, walletConnect]"
+      :chains="[osmosisChain, cosmoshubChain]"
+      :asset-lists="[osmosisAssetList, cosmoshubAssetList]"
+      :signer-options="{}"
+      :endpoint-options="{}">
+      <!-- Your application components -->
+    </ChainProvider>
+  </ThemeProvider>
+</template>
+```
+
+## Next Steps
+
+After installation, you can:
+
+1. Set up wallet connection UI components
+2. Configure chain-specific settings
+3. Implement transaction signing functionality
+
+For more detailed guidance, check out:
+- [Official Documentation](https://docs.hyperweb.io/interchain-kit)
+- [Example Applications](https://github.com/hyperweb-io/interchain-kit/tree/main/examples)

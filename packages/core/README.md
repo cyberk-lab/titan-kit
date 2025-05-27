@@ -84,9 +84,9 @@ console.log(account2)
 ```ts
 
 import { chain as osmosisChain, assetList as osmosisAssetList } from '@chain-registry/v2/mainnet/osmosis';
-import { WalletManager } from '@interchain-kit/core';
-import { keplrWallet } from '@interchain-kit/keplr-extension';
-import { createGetBalance } from "interchainjs/cosmos/bank/v1beta1/query.rpc.func";
+import { WalletManager } from '@titan-kit/core';
+import { keplrWallet } from '@titan-kit/keplr-extension';
+import { createGetBalance } from "@titanlabjs/cosmos-types/cosmos/bank/v1beta1/query.rpc.func";
 
 const walletManager = await WalletManager.create(
     [osmosisChain],
@@ -112,9 +112,9 @@ console.log(balance)
 ```ts
 
 import { chain as osmosisChain, assetList as osmosisAssetList } from '@chain-registry/v2/mainnet/osmosis';
-import { WalletManager } from '@interchain-kit/core';
-import { keplrWallet } from '@interchain-kit/keplr-extension';
-import { createSend } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
+import { WalletManager } from '@titan-kit/core';
+import { keplrWallet } from '@titan-kit/keplr-extension';
+import { createSend } from "@titanlabjs/cosmos-types/cosmos/bank/v1beta1/tx.rpc.func";
 
 const walletManager = await WalletManager.create(
   [osmosisChain],
@@ -177,7 +177,7 @@ A unified toolkit for building applications and smart contracts in the Interchai
 |----------------------|------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
 | **Chain Information**   | [**Chain Registry**](https://github.com/hyperweb-io/chain-registry), [**Utils**](https://www.npmjs.com/package/@chain-registry/utils), [**Client**](https://www.npmjs.com/package/@chain-registry/client) | Everything from token symbols, logos, and IBC denominations for all assets you want to support in your application. |
 | **Wallet Connectors**| [**Interchain Kit**](https://github.com/hyperweb-io/interchain-kit)<sup>beta</sup>, [**Cosmos Kit**](https://github.com/hyperweb-io/cosmos-kit) | Experience the convenience of connecting with a variety of web3 wallets through a single, streamlined interface. |
-| **Signing Clients**          | [**InterchainJS**](https://github.com/hyperweb-io/interchainjs)<sup>beta</sup>, [**CosmJS**](https://github.com/cosmos/cosmjs) | A single, universal signing interface for any network |
+| **Signing Clients**          | [**TitanJS**](https://github.com/cyberk-vn/titanjs)<sup>beta</sup>, [**CosmJS**](https://github.com/cosmos/cosmjs) | A single, universal signing interface for any network |
 | **SDK Clients**              | [**Telescope**](https://github.com/hyperweb-io/telescope)                                                          | Your Frontend Companion for Building with TypeScript with Cosmos SDK Modules. |
 | **Starter Kits**     | [**Create Interchain App**](https://github.com/hyperweb-io/create-interchain-app)<sup>beta</sup>, [**Create Cosmos App**](https://github.com/hyperweb-io/create-cosmos-app) | Set up a modern Interchain app by running one command. |
 | **UI Kits**          | [**Interchain UI**](https://github.com/hyperweb-io/interchain-ui)                                                   | The Interchain Design System, empowering developers with a flexible, easy-to-use UI kit. |

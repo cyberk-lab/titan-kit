@@ -1,0 +1,339 @@
+# Adding New Wallets to Interchain Kit
+
+This guide explains how to create and integrate a new wallet adapter into Interchain Kit. Whether you're adding support for a new browser extension wallet, mobile wallet, or hardware wallet, this document will walk you through the process.
+
+## Understanding the Wallet Architecture
+
+Interchain Kit's wallet system is built on a flexible architecture with the following key components:
+
+1. **BaseWallet**: The abstract base class that all wallet types extend from
+2. **ExtensionWallet**: For browser extension wallets (Keplr, Leap, etc.)
+3. **CosmosWallet**: Specifically for Cosmos-based wallets
+4. **EthereumWallet**: For Ethereum-compatible wallets
+5. **WCWallet**: For WalletConnect integration
+
+## Creating a New Extension Wallet
+
+Let's walk through the process of creating a new wallet adapter for a browser extension.
+
+### 1. Create a New Package
+
+First, create a new package in the `wallets` directory:
+
+```bash
+mkdir -p wallets/my-new-extension/src
+```
+
+### 2. Set Up Package Files
+
+Create the necessary package files:
+
+#### package.json
+
+```json
+{
+  "name": "@interchain-kit/my-new-extension",
+  "version": "0.1.0",
+  "author": "Your Name",
+  "description": "My New Wallet adapter for Interchain Kit",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "license": "SEE LICENSE IN LICENSE",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "scripts": {
+    "copy": "copyfiles -f ../../LICENSE README.md package.json dist",
+    "clean": "rimraf dist/**",
+    "prepare": "npm run build",
+    "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@interchain-kit/core": "^0.3.24"
+  }
+}
+```
+
+#### tsconfig.json
+
+```json
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "include": ["src/**/*"]
+}
+```
+
+#### tsconfig.esm.json
+
+```json
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist/esm",
+    "module": "esnext"
+  }
+}
+```
+
+### 3. Create Wallet Implementation Files
+
+Create the following files in the `src` directory:
+
+#### constant.ts
+
+This file contains the wallet logo and other constants:
+
+```typescript
+export const ICON =
+  "data:image/svg+xml;base64,YOUR_BASE64_ENCODED_SVG_LOGO";
+
+// Add any other constants specific to your wallet here
+```
+
+#### registry.ts
+
+This file defines the wallet information:
+
+```typescript
+import { Wallet } from '@interchain-kit/core';
+import { ICON } from './constant';
+
+export const myNewExtensionInfo: Wallet = {
+  windowKey: 'myNewWallet', // The global window object key for the wallet
+  ethereumKey: 'myNewWallet.ethereum', // For Ethereum integration (if supported)
+  walletIdentifyKey: 'myNewWallet.ethereum.isMyNewWallet', // For identifying the wallet
+  name: 'my-new-extension',
+  prettyName: 'My New Wallet',
+  mode: 'extension',
+  logo: ICON,
+  keystoreChange: 'myNewWallet_keystorechange', // Event name for keystore changes
+  downloads: [
+    {
+      device: 'desktop',
+      browser: 'chrome',
+      link: 'https://chrome.google.com/webstore/detail/my-new-wallet/extension-id',
+    },
+    {
+      link: 'https://my-new-wallet.com/download',
+    },
+  ],
+  // For WalletConnect support (if applicable)
+  walletconnect: {
+    name: 'My New Wallet',
+    projectId: 'your-wallet-connect-project-id'
+  },
+  walletConnectLink: {
+    android: `mywalletapp://wcV2?{wc-uri}`,
+    ios: `mywalletapp://wcV2?{wc-uri}`
+  }
+};
+```
+
+#### index.ts
+
+This is the main entry point that creates and exports the wallet instance:
+
+```typescript
+import { CosmosWallet, EthereumWallet, ExtensionWallet, selectWalletByPlatform, WCMobileWebWallet } from "@interchain-kit/core";
+import { myNewExtensionInfo } from "./registry";
+
+export * from './registry';
+
+const web = new ExtensionWallet(myNewExtensionInfo);
+web.setNetworkWallet('cosmos', new CosmosWallet(myNewExtensionInfo));
+// If your wallet supports Ethereum networks, add this line:
+web.setNetworkWallet('eip155', new EthereumWallet(myNewExtensionInfo));
+
+const myNewWallet = selectWalletByPlatform({
+  'mobile-web': new WCMobileWebWallet(myNewExtensionInfo),
+  'web': web
+});
+
+export { myNewWallet };
+```
+
+### 4. Testing Your Wallet Integration
+
+Create a simple test file in the `__tests__` directory:
+
+```typescript
+import { myNewWallet } from '../src';
+
+describe('My New Wallet', () => {
+  it('should have correct info', () => {
+    expect(myNewWallet.info.name).toBe('my-new-extension');
+    expect(myNewWallet.info.prettyName).toBe('My New Wallet');
+  });
+});
+```
+
+## Advanced Wallet Customization
+
+### Custom Methods
+
+If your wallet requires custom methods beyond the base functionality, you can create a custom wallet class:
+
+```typescript
+// src/custom-wallet.ts
+import { CosmosWallet } from '@interchain-kit/core';
+import { Wallet } from '@interchain-kit/core';
+
+export class MyCustomWallet extends CosmosWallet {
+  constructor(info: Wallet) {
+    super(info);
+  }
+
+  // Override methods as needed
+  async connect(chainId: string): Promise<void> {
+    // Custom connection logic
+    try {
+      await this.client.enable(chainId);
+    } catch (error) {
+      // Custom error handling
+      if ((error as any).message !== 'Request rejected') {
+        await this.addSuggestChain(chainId);
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  // Add custom methods
+  async myCustomMethod(): Promise<void> {
+    // Implementation
+  }
+}
+```
+
+Then, modify your index.ts to use this custom wallet:
+
+```typescript
+import { EthereumWallet, ExtensionWallet, selectWalletByPlatform, WCMobileWebWallet } from "@interchain-kit/core";
+import { myNewExtensionInfo } from "./registry";
+import { MyCustomWallet } from "./custom-wallet";
+
+export * from './registry';
+
+const web = new ExtensionWallet(myNewExtensionInfo);
+web.setNetworkWallet('cosmos', new MyCustomWallet(myNewExtensionInfo));
+// If your wallet supports Ethereum networks
+web.setNetworkWallet('eip155', new EthereumWallet(myNewExtensionInfo));
+
+const myNewWallet = selectWalletByPlatform({
+  'mobile-web': new WCMobileWebWallet(myNewExtensionInfo),
+  'web': web
+});
+
+export { myNewWallet };
+```
+
+## Mobile Wallet Support
+
+For mobile wallets, you'll typically use WalletConnect. Make sure your wallet registry includes the necessary WalletConnect information:
+
+```typescript
+export const myNewMobileWalletInfo: Wallet = {
+  name: 'my-new-mobile',
+  prettyName: 'My New Mobile Wallet',
+  mode: 'mobile',
+  logo: ICON,
+  downloads: [
+    {
+      device: 'mobile',
+      os: 'android',
+      link: 'https://play.google.com/store/apps/details?id=com.mynewwallet',
+    },
+    {
+      device: 'mobile',
+      os: 'ios',
+      link: 'https://apps.apple.com/app/my-new-wallet/id123456789',
+    }
+  ],
+  walletconnect: {
+    name: 'My New Mobile Wallet',
+    projectId: 'your-wallet-connect-project-id'
+  },
+  walletConnectLink: {
+    android: `mynewwallet://wcV2?{wc-uri}`,
+    ios: `mynewwallet://wcV2?{wc-uri}`
+  }
+};
+```
+
+## Hardware Wallet Support
+
+For hardware wallets like Ledger, you'll need to implement specific interfaces for device communication:
+
+```typescript
+import { BaseWallet, LedgerWalletOptions } from '@interchain-kit/core';
+
+export class MyHardwareWallet extends BaseWallet {
+  options: LedgerWalletOptions;
+  
+  constructor(info: Wallet, options: LedgerWalletOptions) {
+    super(info);
+    this.options = options;
+  }
+  
+  // Implement hardware wallet-specific methods
+  async connectDevice(): Promise<void> {
+    // Logic to connect to the hardware device
+  }
+  
+  // Override base methods for hardware wallet interaction
+  async getAccount(chainId: string): Promise<WalletAccount> {
+    // Hardware wallet-specific account retrieval
+  }
+  
+  async getOfflineSigner(chainId: string, preferredSignType?: SignType): Promise<IGenericOfflineSigner> {
+    // Hardware wallet-specific signer implementation
+  }
+}
+```
+
+## Using Your New Wallet
+
+After creating your wallet adapter, you can use it in your application:
+
+```typescript
+import { ChainProvider } from '@interchain-kit/react'; // or '@interchain-kit/vue'
+import { myNewWallet } from '@interchain-kit/my-new-extension';
+import { keplrWallet } from '@interchain-kit/keplr-extension';
+
+function App() {
+  return (
+    <ChainProvider
+      chains={chains}
+      assetLists={assetLists}
+      wallets={[myNewWallet, keplrWallet]} // Add your new wallet to the supported wallets
+    >
+      {/* Your app components */}
+    </ChainProvider>
+  );
+}
+```
+
+## Contributing to the Interchain Kit Repository
+
+If you've created a wallet adapter that might be useful for others:
+
+1. Fork the Interchain Kit repository
+2. Add your wallet adapter following the structure described above
+3. Submit a pull request with your changes
+
+The team will review your submission and provide feedback before merging it into the main repository.
+
+## Best Practices
+
+1. **Thorough Testing**: Test your wallet adapter with multiple chains
+2. **Error Handling**: Implement proper error handling for connection failures
+3. **Documentation**: Document any specific features or limitations of your wallet adapter
+4. **Version Compatibility**: Ensure compatibility with the latest version of Interchain Kit
+5. **Security**: Follow security best practices, especially for hardware wallets

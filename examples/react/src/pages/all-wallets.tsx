@@ -1,26 +1,13 @@
-import { assetLists, chains } from "@chain-registry/v2";
-import {
-  BaseWallet,
-  EthereumWallet,
-  isInstanceOf,
-  MultiChainWallet,
-  WCWallet,
-} from "@interchain-kit/core";
-import {
-  useChainWallet,
-  useWalletManager,
-  useWalletModal,
-} from "@interchain-kit/react";
-import { useRef, useState } from "react";
-import { makeKeplrChainInfo } from "../utils";
-import { Chain, Asset, AssetList } from "@chain-registry/v2-types";
-import { coins } from "@cosmjs/amino";
-import { ChainInfo } from "@keplr-wallet/types";
-import { createGetBalance } from "interchainjs/cosmos/bank/v1beta1/query.rpc.func";
-import QRCode from "react-qr-code";
-import { createSend } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
-import { RpcClient } from "@interchainjs/cosmos/query/rpc";
-import { ethers } from "ethers";
+import { BaseWallet, WCWallet } from '@titan-kit/core';
+import { useChainWallet, useWalletModal } from '@titan-kit/react';
+import { useWalletManager } from '@titan-kit/react';
+
+import { useEffect, useRef, useState } from 'react';
+import { Chain } from '@chain-registry/v2-types';
+import { getBalance } from '@titanlabjs/cosmos-types/cosmos/bank/v1beta1/query.rpc.func';
+import { MsgSend } from '@titanlabjs/cosmos-types/cosmos/bank/v1beta1/tx';
+import QRCode from 'react-qr-code';
+import { MessageComposer } from '@titanlabjs/titan-types/cosmos/bank/v1beta1/tx.registry';
 
 type BalanceProps = {
   address: string;
@@ -28,11 +15,10 @@ type BalanceProps = {
   chainName: string;
   chainId: string;
   chain: Chain;
-  assetList: AssetList;
 };
 
-const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
-  const { rpcEndpoint } = useChainWallet(
+const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
+  const { rpcEndpoint, signingClient } = useChainWallet(
     chain.chainName,
     wallet.info?.name as string
   );
@@ -41,67 +27,12 @@ const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
   const [balance, setBalance] = useState<any>();
 
   const handleBalanceQuery = async () => {
-    let balance;
-
     setIsLoading(true);
-
-    if (isInstanceOf(wallet, WCWallet)) {
-      if (chain.chainType === "eip155") {
-        // await wallet.personalSign("test", address);
-
-        // const provider = wallet.getProvider();
-        // const ethersProvider = new ethers.BrowserProvider(provider);
-        // const ethersProvider = new ethers.providers.Web3Provider(provider);
-        const ethersProvider = new ethers.providers.JsonRpcProvider(
-          rpcEndpoint
-        );
-        const result = await ethersProvider.getBalance(address, "latest");
-        const balanceInWei = result;
-        balance = { balance: { amount: balanceInWei.toString() } };
-      }
-      if (chain.chainType === "cosmos") {
-        const balanceQuery = createGetBalance(rpcEndpoint as string);
-        balance = await balanceQuery({
-          address,
-          denom: chain.staking?.stakingTokens[0].denom as string,
-        });
-      }
-    }
-
-    if (isInstanceOf(wallet, EthereumWallet)) {
-      // const provider = new ethers.BrowserProvider(wallet.getProvider());
-      // const provider = new ethers.providers.Web3Provider(wallet.getProvider());
-      const provider = new ethers.providers.JsonRpcProvider(rpcEndpoint);
-      const result = await provider.getBalance(address);
-      balance = { balance: { amount: result.toString() } };
-    }
-
-    if (isInstanceOf(wallet, MultiChainWallet)) {
-      if (chain.chainType === "eip155") {
-        const ethWallet = wallet.getWalletByChainType("eip155");
-        if (isInstanceOf(ethWallet, EthereumWallet)) {
-          // const provider = new ethers.BrowserProvider(ethWallet.getProvider());
-          // const provider = new ethers.providers.Web3Provider(
-          //   ethWallet.getProvider()
-          // );
-          const provider = new ethers.providers.JsonRpcProvider(rpcEndpoint);
-          await ethWallet.switchChain(chain.chainId as string);
-          const result = await provider.getBalance(address);
-          balance = { balance: { amount: result.toString() } };
-        }
-      }
-
-      if (chain.chainType === "cosmos") {
-        const balanceQuery = createGetBalance(rpcEndpoint as string);
-        balance = await balanceQuery({
-          address,
-          denom:
-            (chain.staking?.stakingTokens[0].denom as string) ||
-            assetList.assets[0].base,
-        });
-      }
-    }
-
+    const balance = await getBalance(rpcEndpoint as string, {
+      address,
+      denom: chain.staking?.stakingTokens[0].denom as string,
+    });
+    console.log(balance);
     setBalance(balance);
     setIsLoading(false);
   };
@@ -126,152 +57,62 @@ type SendTokenProps = {
   address: string;
   chain: Chain;
 };
+
 const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
-  const toAddressRef = useRef<HTMLInputElement>(null);
+  const ref = useRef<HTMLInputElement>(null);
   const amountRef = useRef<HTMLInputElement>(null);
 
-  const { getSigningClient, assetList } = useChainWallet(
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.value = 'titan1436453umjhme9mjt92krtwf0r07s7ql766hp6k';
+    }
+    if (amountRef.current) {
+      amountRef.current.value = (1e16).toString();
+    }
+  }, []);
+
+  const { signingClient } = useChainWallet(
     chain.chainName,
     wallet.info?.name as string
   );
 
   const handleSendToken = async () => {
-    if (!toAddressRef.current || !amountRef.current) {
-      return;
-    }
+    if (ref.current) {
+      const recipientAddress = ref.current.value;
+      const denom = chain.staking?.stakingTokens[0].denom as string;
 
-    const transaction = {
-      from: address,
-      to: toAddressRef.current.value,
-      value: `0x${parseInt(amountRef.current.value).toString(16)}`,
-      data: "0x",
-    };
+      const fee = {
+        amount: [
+          {
+            amount: (BigInt(13) * BigInt(10) ** BigInt(15)).toString(),
+            denom,
+          },
+        ],
+        gas: '127496',
+      };
 
-    if (isInstanceOf(wallet, WCWallet)) {
-      if (chain.chainType === "eip155") {
-        const provider = wallet.getProvider();
-
-        // const provider = new ethers.BrowserProvider(wallet.getProvider());
-        const ethProvider = new ethers.providers.Web3Provider(provider);
-
-        console.log(await ethProvider.getNetwork());
-        // const provider = new ethers.JsonRpcProvider(
-        //   "https://endpoints.omniatech.io/v1/eth/sepolia/public"
-        // );
-        console.log(await provider.request({ method: "eth_accounts" }));
-
-        const signer = await ethProvider.getSigner();
-
-        try {
-          console.log(transaction);
-
-          const txResponse = await signer.sendTransaction(transaction);
-
-          const txReceipt = await txResponse.wait();
-          console.log("Transaction hash:", txReceipt?.hash);
-          console.log(txResponse);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-      if (chain.chainType === "cosmos") {
-        const signingClient = await getSigningClient();
-        const txSend = createSend(signingClient);
-        const recipientAddress = toAddressRef.current.value;
-        const denom =
-          (chain.staking?.stakingTokens[0].denom as string) ||
-          assetList.assets[0].base;
-
-        const fee = {
-          amount: coins(25000, denom),
-          gas: "1000000",
-        };
-
-        try {
-          const tx = await txSend(
-            address,
-            {
-              fromAddress: address,
-              toAddress: recipientAddress,
-              amount: [
-                { denom: denom, amount: amountRef.current?.value as string },
-              ],
-            },
-            fee,
-            "test"
-          );
-          console.log(tx);
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    }
-
-    if (isInstanceOf(wallet, EthereumWallet)) {
-      const provider = new ethers.providers.Web3Provider(wallet.getProvider());
-      const signer = await provider.getSigner();
       try {
-        console.log(transaction);
-        await wallet.switchChain(chain.chainId as string);
-        const tx = await signer.sendTransaction(transaction);
-        console.log(tx);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    if (isInstanceOf(wallet, MultiChainWallet)) {
-      if (chain.chainType === "eip155") {
-        const ethWallet = wallet.getWalletByChainType("eip155");
-        if (isInstanceOf(ethWallet, EthereumWallet)) {
-          const provider = ethWallet.getProvider();
-          console.log(provider);
-          // const provider = new ethers.BrowserProvider(ethWallet.getProvider());
-          const ethProvider = new ethers.providers.Web3Provider(provider);
-
-          console.log(await ethProvider.getNetwork());
-
-          const signer = await ethProvider.getSigner();
-          try {
-            // await ethWallet.switchChain(chain.chainId as string);
-            const tx = await signer.sendTransaction(transaction);
-            console.log(tx);
-          } catch (error) {
-            console.log(error);
-          }
-        }
-      }
-
-      if (chain.chainType === "cosmos") {
-        const signingClient = await getSigningClient();
-        const txSend = createSend(signingClient);
-        const recipientAddress = toAddressRef.current.value;
-        const denom =
-          (chain.staking?.stakingTokens[0].denom as string) ||
-          assetList.assets[0].base;
-
-        const fee = {
-          amount: coins(25000, denom),
-          gas: "1000000",
-        };
-
-        try {
-          const tx = await txSend(
-            address,
-            {
-              fromAddress: address,
+        signingClient!.addEncoders([MsgSend]);
+        const res = await signingClient!.signAndBroadcastSync(
+          address,
+          [
+            MessageComposer.fromPartial.send({
+              fromAddress: address!,
               toAddress: recipientAddress,
               amount: [
-                { denom: denom, amount: amountRef.current?.value as string },
+                {
+                  denom,
+                  amount: amountRef.current?.value as string,
+                },
               ],
-            },
-            fee,
-            "test"
-          );
-          console.log(tx);
-        } catch (error) {
-          console.error(error);
-        }
+            }),
+          ],
+          fee,
+          'test'
+        );
+        console.log(res);
+      } catch (error) {
+        console.error(error);
       }
     }
   };
@@ -282,20 +123,17 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
         <button className="bg-blue-100 p-1 m-1" onClick={handleSendToken}>
           Send Token to:
         </button>
-        <input
-          className="border-red-300 border-2 rounded-sm"
-          ref={toAddressRef}
-        />
+        <input className="border-red-300 border-2 rounded-sm" ref={ref} />
       </div>
       <div>
-        amount:{" "}
+        amount:{' '}
         <input className="border-red-300 border-2 rounded-sm" ref={amountRef} />
       </div>
     </td>
   );
 };
 
-const RpcTd = ({ wallet, address, chain }: SendTokenProps) => {
+const RpcTd = ({ wallet, chain }: SendTokenProps) => {
   const { rpcEndpoint, getRpcEndpoint } = useChainWallet(
     chain.chainName,
     wallet.info?.name as string
@@ -314,19 +152,27 @@ const AddressTd = ({ wallet, chain }: SendTokenProps) => {
     chain.chainName,
     wallet.info?.name as string
   );
+
+  const getAccount = () => {
+    walletHandler.getAccount(chain.chainId as string).then((account) => {
+      console.log(account);
+    });
+  };
+
   return (
     <td>
       <p>{address}</p>
-      <button onClick={() => walletHandler.getAccount(chain.chainId as string)}>
-        get account
-      </button>
+      <button onClick={getAccount}>get account</button>
     </td>
   );
 };
 
 const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
-  const { address, rpcEndpoint, connect, disconnect, status, assetList } =
-    useChainWallet(chain.chainName, wallet.info?.name as string);
+  const { address, connect, disconnect, status } = useChainWallet(
+    chain.chainName,
+    wallet.info?.name as string
+  );
+
   return (
     <tr>
       <td>
@@ -344,7 +190,6 @@ const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
         chainName={chain.chainName}
         wallet={wallet}
         chain={chain}
-        assetList={assetList}
       />
       <SendTokenTd address={address} wallet={wallet} chain={chain} />
     </tr>
@@ -354,18 +199,18 @@ const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
 const WalletConnectTd = ({ wallet }: { wallet: BaseWallet }) => {
   const walletManager = useWalletManager();
 
-  const chainIds = walletManager.chains.map((c) => c.chainId);
+  // const chainIds = walletManager.chains.map((c) => c.chainId);
 
   const currentWallet = walletManager.wallets.find(
     (w: BaseWallet) => w.info?.name === wallet.info?.name
   );
 
   const connect = () => {
-    walletManager.connect(wallet.info?.name as string, "osmosis");
+    walletManager.connect(wallet.info?.name as string, 'titantestnet');
   };
 
   const disconnect = () => {
-    walletManager.disconnect(wallet.info?.name as string, "osmosis");
+    walletManager.disconnect(wallet.info?.name as string, 'titantestnet');
   };
 
   const uri = walletManager.walletConnectQRCodeUri;
@@ -387,29 +232,10 @@ const WalletConnectTd = ({ wallet }: { wallet: BaseWallet }) => {
 const E2ETest = () => {
   const walletManager = useWalletManager();
   const { open } = useWalletModal();
-  const addChain = async () => {
-    const keplrExtension = walletManager.wallets.find(
-      (w) => w.info?.name === "keplr-extension"
-    );
-
-    const chain = chains.find((c) => c.chainName === "cosmoshub");
-    const assetList = assetLists.find((a) => a.chainName === "cosmoshub");
-
-    const chainInfo: ChainInfo = makeKeplrChainInfo(
-      chain as Chain,
-      assetList?.assets[0] as Asset,
-      "http://localhost:26653",
-      "http://localhost:1313",
-      "test-cosmoshub-4",
-      "cosmoshub"
-    );
-
-    keplrExtension?.addSuggestChain(chainInfo);
-  };
 
   return (
     <div>
-      <table style={{ width: "1000px" }}>
+      <table style={{ width: '1000px' }}>
         <thead>
           <tr>
             <th>Name</th>
@@ -459,9 +285,7 @@ const E2ETest = () => {
           })}
         </tbody>
       </table>
-      <button className="bg-blue-100 p-1 m-1" onClick={addChain}>
-        add suggest chain
-      </button>
+
       <button className="bg-blue-100 p-1 m-1" onClick={open}>
         open modal
       </button>

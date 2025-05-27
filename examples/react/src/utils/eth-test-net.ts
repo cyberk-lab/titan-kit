@@ -15,13 +15,15 @@ type EthereumChainConfig = {
 };
 
 export const createChainFromEthereumChainInfo = (etherChainInfo: EthereumChainConfig): Chain => {
-  const newChain = {
+  const newChain: Chain = {
     ...ethereumChain,
     chainId: etherChainInfo.chainId,
     chainName: etherChainInfo.chainName,
+    prettyName: etherChainInfo.chainName,
     apis: {
       rpc: etherChainInfo.rpcUrls.map((address) => ({ address })),
     },
+    explorers: etherChainInfo.blockExplorerUrls?.map(url => ({ url }))
   }
   return newChain
 }

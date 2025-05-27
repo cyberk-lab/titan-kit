@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useWalletManager } from '@interchain-kit/react'
+import { useWalletManager } from '@titan-kit/react'
 
 const UseWalletManager = () => {
 	const walletManager = useWalletManager()

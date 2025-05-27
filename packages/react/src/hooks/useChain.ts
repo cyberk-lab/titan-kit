@@ -1,35 +1,58 @@
+import { ChainNameNotExist } from '@titan-kit/core';
+
 import { UseChainReturnType } from '../types/chain';
-import { useWalletModal } from "../modal";
+import { useSigningClient } from './useSigningClient';
 import { useWalletManager } from './useWalletManager';
-import { ChainNameNotExist } from '@interchain-kit/core';
-import { ChainWallet } from '../store/chain-wallet';
+import { useWalletModal } from './useWalletModal';
 
 export const useChain = (chainName: string): UseChainReturnType => {
+  const {
+    assetLists,
+    currentWalletName,
+    disconnect,
+    setCurrentChainName,
+    getChainByName,
+    getWalletByName,
+    getChainWalletState,
+    getChainLogoUrl,
+    connect,
+    getSigningClient,
+    getRpcEndpoint,
+    getAccount,
+    getStatefulWalletByName,
+  } = useWalletManager();
 
-  const { assetLists, currentWalletName, disconnect, setCurrentChainName, getChainByName, getWalletByName, getChainWalletState, getChainLogoUrl, connect, getSigningClient, getRpcEndpoint, getAccount } = useWalletManager()
-
-  const chain = getChainByName(chainName)
+  const chain = getChainByName(chainName);
 
   if (!chain) {
-    throw new ChainNameNotExist(chainName)
+    throw new ChainNameNotExist(chainName);
   }
 
-  const assetList = assetLists.find(a => a.chainName === chainName)
-  const wallet = getWalletByName(currentWalletName)
+  const assetList = assetLists.find((a) => a.chainName === chainName);
+  const wallet = getStatefulWalletByName(currentWalletName);
 
-  const chainWalletStateToShow = getChainWalletState(currentWalletName, chainName)
-  const { open, close } = useWalletModal()
+  const chainWalletStateToShow = getChainWalletState(
+    currentWalletName,
+    chainName
+  );
+  const { open, close } = useWalletModal();
+
+  const {
+    signingClient,
+    isLoading: isSigningClientLoading,
+    error: signingClientError,
+  } = useSigningClient(chainName, currentWalletName);
 
   return {
     //for migration cosmos kit
     connect: () => {
-      setCurrentChainName(chainName)
-      open()
+      setCurrentChainName(chainName);
+      open();
     },
     disconnect: async () => disconnect(currentWalletName, chainName),
     openView: () => {
-      setCurrentChainName(chainName)
-      open()
+      setCurrentChainName(chainName);
+      open();
     },
     closeView: close,
     getRpcEndpoint: () => getRpcEndpoint(currentWalletName, chainName),
@@ -42,9 +65,14 @@ export const useChain = (chainName: string): UseChainReturnType => {
     chain,
     assetList,
     address: chainWalletStateToShow?.account?.address,
-    wallet: new ChainWallet(wallet, () => connect(currentWalletName, chainName), () => disconnect(currentWalletName, chainName), () => getAccount(currentWalletName, chainName)),
-    rpcEndpoint: chainWalletStateToShow?.rpcEndpoint,
-    getSigningClient: () => getSigningClient(currentWalletName, chainName),
-  }
+    wallet,
 
-}
+    getSigningClient: () => getSigningClient(currentWalletName, chainName),
+
+    signingClient,
+    isSigningClientLoading,
+    signingClientError,
+
+    rpcEndpoint: chainWalletStateToShow?.rpcEndpoint,
+  };
+};

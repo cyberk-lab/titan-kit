@@ -109,13 +109,13 @@ describe('MultiChainWallet', () => {
         expect(mockBaseWallet.addSuggestChain).toHaveBeenCalledWith(chain.chainId);
     });
 
-    it('should get provider for a chain', () => {
+    it('should get provider for a chain', async () => {
         const chain: Chain = { chainId: 'cosmoshub-4', chainType: 'cosmos', chainName: 'Cosmos Hub' };
         jest.spyOn(multiChainWallet, 'getChainById').mockReturnValue(chain);
-        jest.spyOn(mockBaseWallet, 'getProvider').mockReturnValue('mockProvider');
+        jest.spyOn(mockBaseWallet, 'getProvider').mockResolvedValue('mockProvider');
         multiChainWallet.setNetworkWallet('cosmos', mockBaseWallet);
 
-        const provider = multiChainWallet.getProvider(chain.chainId as string);
+        const provider = await multiChainWallet.getProvider(chain.chainId as string);
 
         expect(provider).toBe('mockProvider');
         expect(mockBaseWallet.getProvider).toHaveBeenCalledWith(chain.chainId);

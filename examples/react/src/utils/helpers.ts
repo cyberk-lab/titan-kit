@@ -1,5 +1,5 @@
 import { coins } from '@cosmjs/proto-signing';
-import { SigningClient } from '@interchain-kit/react';
+import { SigningClient } from '@titan-kit/react';
 import { createSend } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
 import { createGetBalance } from "interchainjs/cosmos/bank/v1beta1/query.rpc.func";
 export const sendToken = async (

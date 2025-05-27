@@ -2,28 +2,45 @@
  * @jest-environment jsdom
  */
 
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { useChain } from '../../src/hooks/useChain';
 import { useWalletManager } from '../../src/hooks/useWalletManager';
-import { useWalletModal } from '../../src/modal';
-import { ChainNameNotExist, WalletState } from '@interchain-kit/core';
-import { ChainWalletState, InterchainStore } from '../../src/store';
+import { ChainNameNotExist, ChainNotExist, WalletState } from '@titan-kit/core';
+import { ChainWalletState, TitanStore } from '../../src/store';
 import { MockWallet } from '../helpers/mock-wallet';
+import { StatefulWallet } from '../../src/store/stateful-wallet';
+import { useWalletModal } from '../../src/hooks';
 
 jest.mock('../../src/hooks/useWalletManager');
-jest.mock('../../src/modal');
+jest.mock('../../src/hooks/useWalletModal.ts');
 
 describe('useChain', () => {
   const mockChain = { chainName: 'test-chain', chainType: 'cosmos' as const };
-  const mockUseWalletManager = useWalletManager as jest.MockedFunction<typeof useWalletManager>;
-  const mockUseWalletModal = useWalletModal as jest.MockedFunction<typeof useWalletModal>;
+  const mockUseWalletManager = useWalletManager as jest.MockedFunction<
+    typeof useWalletManager
+  >;
+  const mockUseWalletModal = useWalletModal as jest.MockedFunction<
+    typeof useWalletModal
+  >;
 
-  const mockWallet = new MockWallet({ name: 'test-wallet', mode: 'extension', prettyName: 'Test Wallet' });
+  const mockWallet = new MockWallet({
+    name: 'test-wallet',
+    mode: 'extension',
+    prettyName: 'Test Wallet',
+  });
 
-  const mockWalletManager: jest.Mocked<InterchainStore> = {
+  const statefulWallet = new StatefulWallet(
+    mockWallet,
+    () => {},
+    () => ({} as StatefulWallet),
+    () => {},
+    () => ({} as TitanStore)
+  );
+
+  const mockWalletManager: jest.Mocked<TitanStore> = {
     chains: [{ chainName: 'test-chain', chainType: 'cosmos' as const }],
     assetLists: [{ chainName: 'test-chain', assets: [] }],
-    wallets: [mockWallet],
+    wallets: [statefulWallet],
     currentWalletName: 'test-wallet',
     currentChainName: 'test-chain',
     chainWalletState: [],
@@ -54,12 +71,18 @@ describe('useChain', () => {
     getAccount: jest.fn(),
     getEnv: jest.fn(),
     getDownloadLink: jest.fn(),
-  }
+    isReady: true,
+    createStatefulWallet: jest.fn(),
+    modalIsOpen: false,
+    openModal: jest.fn(),
+    closeModal: jest.fn(),
+    getStatefulWalletByName: jest.fn(),
+  };
 
   const mockWalletModal = {
     open: jest.fn(),
     close: jest.fn(),
-    modalIsOpen: false
+    modalIsOpen: false,
   };
 
   beforeEach(() => {
@@ -69,20 +92,25 @@ describe('useChain', () => {
 
   it('should throw an error if chain does not exist', () => {
     mockWalletManager.getChainByName.mockReturnValue(undefined);
-    const { result } = renderHook(() => useChain('non-existent-chain'));
 
-    expect(() => result.current).toThrow(ChainNameNotExist);
+    expect(() => {
+      renderHook(() => useChain('non-existent-chain'));
+    }).toThrow(new ChainNameNotExist('non-existent-chain'));
   });
 
-  it('should return correct values for an existing chain', () => {
-
+  it('should return correct values for an existing chain', async () => {
     const mockChainWalletState: ChainWalletState = {
       walletState: WalletState.Connected,
-      account: { username: 'test-user', address: 'test-address', algo: 'secp256k1' as const, pubkey: new Uint8Array() },
+      account: {
+        username: 'test-user',
+        address: 'test-address',
+        algo: 'secp256k1' as const,
+        pubkey: new Uint8Array(),
+      },
       errorMessage: '',
       rpcEndpoint: 'http://localhost:26657',
       chainName: 'test-chain',
-      walletName: 'test-wallet'
+      walletName: 'test-wallet',
     };
 
     mockWalletManager.getChainByName.mockReturnValue(mockChain);
@@ -91,29 +119,33 @@ describe('useChain', () => {
 
     const { result } = renderHook(() => useChain('test-chain'));
 
-    expect(result.current.chain).toEqual(mockChain);
-    expect(result.current.status).toBe(WalletState.Connected);
-    expect(result.current.username).toBe('test-user');
-    expect(result.current.address).toBe('test-address');
-    expect(result.current.rpcEndpoint).toBe('http://localhost:26657');
+    await waitFor(() => {
+      expect(result.current.chain).toEqual(mockChain);
+      expect(result.current.status).toBe(WalletState.Connected);
+      expect(result.current.username).toBe('test-user');
+      expect(result.current.address).toBe('test-address');
+      expect(result.current.rpcEndpoint).toBe('http://localhost:26657');
+    });
   });
 
-  it('should call connect and open modal when connect is invoked', () => {
-
+  it('should call connect and open modal when connect is invoked', async () => {
     mockWalletManager.getChainByName.mockReturnValue(mockChain);
 
     const { result } = renderHook(() => useChain('test-chain'));
 
-    act(() => {
+    await act(() => {
       result.current.connect();
     });
 
-    expect(mockWalletManager.setCurrentChainName).toHaveBeenCalledWith('test-chain');
-    expect(mockWalletModal.open).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockWalletManager.setCurrentChainName).toHaveBeenCalledWith(
+        'test-chain'
+      );
+      expect(mockWalletModal.open).toHaveBeenCalled();
+    });
   });
 
   it('should call disconnect when disconnect is invoked', async () => {
-
     mockWalletManager.getChainByName.mockReturnValue(mockChain);
 
     const { result } = renderHook(() => useChain('test-chain'));
@@ -122,33 +154,42 @@ describe('useChain', () => {
       await result.current.disconnect();
     });
 
-    expect(mockWalletManager.disconnect).toHaveBeenCalledWith('test-wallet', 'test-chain');
+    await waitFor(() => {
+      expect(mockWalletManager.disconnect).toHaveBeenCalledWith(
+        'test-wallet',
+        'test-chain'
+      );
+    });
   });
 
-  it('should call open modal when openView is invoked', () => {
-
+  it('should call open modal when openView is invoked', async () => {
     mockWalletManager.getChainByName.mockReturnValue(mockChain);
 
     const { result } = renderHook(() => useChain('test-chain'));
 
-    act(() => {
+    await act(() => {
       result.current.openView();
     });
 
-    expect(mockWalletManager.setCurrentChainName).toHaveBeenCalledWith('test-chain');
-    expect(mockWalletModal.open).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockWalletManager.setCurrentChainName).toHaveBeenCalledWith(
+        'test-chain'
+      );
+      expect(mockWalletModal.open).toHaveBeenCalled();
+    });
   });
 
-  it('should call close modal when closeView is invoked', () => {
-
+  it('should call close modal when closeView is invoked', async () => {
     mockWalletManager.getChainByName.mockReturnValue(mockChain);
 
     const { result } = renderHook(() => useChain('test-chain'));
 
-    act(() => {
+    await act(() => {
       result.current.closeView();
     });
 
-    expect(mockWalletModal.close).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockWalletModal.close).toHaveBeenCalled();
+    });
   });
 });

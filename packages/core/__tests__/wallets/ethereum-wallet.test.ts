@@ -132,9 +132,9 @@ describe('EthereumWallet', () => {
     });
 
     describe('getProvider', () => {
-        it('should return the Ethereum provider', () => {
+        it('should return the Ethereum provider', async () => {
             wallet.ethereum = { mockProvider: true };
-            expect(wallet.getProvider()).toEqual({ mockProvider: true });
+            expect(await wallet.getProvider('0x1')).toEqual({ mockProvider: true });
         });
     });
 });

@@ -5,7 +5,7 @@ import './index.css';
 import '@interchain-ui/react/styles';
 import { BrowserRouter } from 'react-router-dom';
 
-import { TitanKitProvider, InterchainWalletModal } from '@titan-kit/react';
+import { TitanKitProvider } from '@titan-kit/react';
 
 import { assetLists, chains } from '@chain-registry/v2';
 import { BaseWallet, ExtensionWallet, isInstanceOf } from '@titan-kit/core';
@@ -168,7 +168,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       chains={_chains}
       wallets={_wallets}
       assetLists={_assetLists}
-      walletModal={InterchainWalletModal}
     >
       <BrowserRouter>
         <App />

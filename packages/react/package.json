@@ -1,6 +1,6 @@
 {
   "name": "@titan-kit/react",
-  "version": "0.0.3-alpha.7",
+  "version": "0.0.4-alpha.0",
   "author": "BangBu <68235687+bangbu10820@users.noreply.github.com>",
   "description": "titan-kit wallet connector react package",
   "main": "index.js",
@@ -35,11 +35,11 @@
   "dependencies": {
     "@chain-registry/v2-types": "^0.53.40",
     "@interchain-ui/react": "1.26.1",
+    "@react-icons/all-files": "^4.1.0",
+    "@titan-kit/core": "^0.0.4-alpha.0",
     "@titanlabjs/cosmos": "0.2.7-alpha.0",
     "@titanlabjs/cosmos-types": "0.2.7-alpha.0",
     "@titanlabjs/types": "0.2.7-alpha.0",
-    "@react-icons/all-files": "^4.1.0",
-    "@titan-kit/core": "^0.0.3-alpha.7",
     "@walletconnect/types": "^2.17.3",
     "zustand": "^5.0.3"
   },
@@ -53,10 +53,10 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^15.0.0",
     "@testing-library/react-hooks": "^8.0.1",
+    "@walletconnect/universal-provider": "^2.19.1",
     "babel-jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
-    "ts-jest": "^29.3.0",
-    "@walletconnect/universal-provider": "^2.19.1"
+    "ts-jest": "^29.3.0"
   },
   "peerDependencies": {
     "@types/react": "16 || 17 || 18 || 19",

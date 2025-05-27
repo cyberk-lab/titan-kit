@@ -1,6 +1,6 @@
 {
   "name": "@titan-kit/untitled-wallet",
-  "version": "0.0.3-alpha.7",
+  "version": "0.0.4-alpha.0",
   "author": "BangBu <68235687+bangbu10820@users.noreply.github.com>",
   "description": "titan-kit wallet connector",
   "main": "index.js",
@@ -31,7 +31,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@titan-kit/core": "^0.0.3-alpha.7"
+    "@titan-kit/core": "^0.0.4-alpha.0"
   },
   "gitHead": "35337e4470a0594ba644d31be8e24c8e295296f6"
 }

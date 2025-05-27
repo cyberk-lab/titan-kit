@@ -5,15 +5,22 @@ import './index.css';
 import '@interchain-ui/react/styles';
 import { BrowserRouter } from 'react-router-dom';
 
-import { ChainProvider, InterchainWalletModal } from '@titan-kit/react';
+import { TitanKitProvider, InterchainWalletModal } from '@titan-kit/react';
 
 import { assetLists, chains } from '@chain-registry/v2';
 import { BaseWallet, ExtensionWallet, isInstanceOf } from '@titan-kit/core';
 import { keplrWallet } from '@titan-kit/keplr-extension';
-import { untitledWallet } from '@titan-kit/untitled-wallet';
+import { UntitledWallet } from '@titan-kit/untitled-wallet';
 
 // import { MockWallet } from "@titan-kit/mock-wallet";
-import { ThemeProvider } from '@interchain-ui/react';
+const untitledWallet = new UntitledWallet({
+  metadata: {
+    name: 'Hyperion',
+    description: 'The main swap on titan',
+    icons: [],
+    url: 'https://hyperion.com',
+  },
+});
 
 const chainNames: string[] = [
   // "injectivetestnet",
@@ -157,17 +164,15 @@ const _wallets: BaseWallet[] = [
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ThemeProvider>
-      <ChainProvider
-        chains={_chains}
-        wallets={_wallets}
-        assetLists={_assetLists}
-        walletModal={InterchainWalletModal}
-      >
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ChainProvider>
-    </ThemeProvider>
+    <TitanKitProvider
+      chains={_chains}
+      wallets={_wallets}
+      assetLists={_assetLists}
+      walletModal={InterchainWalletModal}
+    >
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </TitanKitProvider>
   </React.StrictMode>
 );

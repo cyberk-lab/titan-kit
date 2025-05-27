@@ -4482,7 +4482,7 @@
   version "0.0.3-alpha.7"
   dependencies:
     "@keplr-wallet/provider-extension" "^0.12.102"
-    "@titan-kit/core" "file:../../../../Library/Caches/Yarn/v6/npm-@titan-kit-keplr-extension-0.0.3-alpha.7-c3a207e4-26db-43f2-954a-24be6d5b2b73-1748271045323/node_modules/packages/core"
+    "@titan-kit/core" "file:../../../../Library/Caches/Yarn/v6/npm-@titan-kit-keplr-extension-0.0.3-alpha.7-f1c56584-cc70-4c79-9be6-6931dd9b4523-1748329696724/node_modules/packages/core"
 
 "@titan-kit/react@file:packages/react":
   version "0.0.3-alpha.7"
@@ -4490,7 +4490,7 @@
     "@chain-registry/v2-types" "^0.53.40"
     "@interchain-ui/react" "1.26.1"
     "@react-icons/all-files" "^4.1.0"
-    "@titan-kit/core" "file:../../../../Library/Caches/Yarn/v6/npm-@titan-kit-react-0.0.3-alpha.7-45e252d2-ba78-4ffd-8b44-8675cd7e0446-1748271045321/node_modules/packages/core"
+    "@titan-kit/core" "file:../../../../Library/Caches/Yarn/v6/npm-@titan-kit-react-0.0.3-alpha.7-06f11c25-7b45-4609-84c4-93dd6e58b363-1748329696723/node_modules/packages/core"
     "@titanlabjs/cosmos" "0.2.7-alpha.0"
     "@titanlabjs/cosmos-types" "0.2.7-alpha.0"
     "@titanlabjs/types" "0.2.7-alpha.0"
@@ -4500,7 +4500,7 @@
 "@titan-kit/untitled-wallet@file:wallets/untitled-wallet":
   version "0.0.3-alpha.7"
   dependencies:
-    "@titan-kit/core" "file:../../../../Library/Caches/Yarn/v6/npm-@titan-kit-untitled-wallet-0.0.3-alpha.7-12c779fc-117b-4400-80e5-45748ec2f7cf-1748271045321/node_modules/packages/core"
+    "@titan-kit/core" "file:../../../../Library/Caches/Yarn/v6/npm-@titan-kit-untitled-wallet-0.0.3-alpha.7-499d1f4f-0833-47ae-9ef8-62b213a93077-1748329696723/node_modules/packages/core"
 
 "@titanlabjs/auth@^0.2.7-alpha.0":
   version "0.2.7-alpha.0"

@@ -11,7 +11,7 @@ import {
   WalletState,
 } from '@titan-kit/core';
 import type { SigningClient } from '@titanlabjs/cosmos/signing-client';
-import { SigningOptions as InterchainSigningOptions } from '@titanlabjs/cosmos/types/signing-client';
+import { SigningOptions as TitanKitSigningOptions } from '@titanlabjs/cosmos/types/signing-client';
 import { HttpEndpoint } from '@titanlabjs/types';
 import { createStore } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -27,7 +27,7 @@ const immerSyncUp = (newWalletManager: WalletManager) => {
     wallets: BaseWallet[];
     signerOptions: SignerOptions;
     endpointOptions: EndpointOptions;
-    signerOptionMap: Record<string, InterchainSigningOptions>;
+    signerOptionMap: Record<string, TitanKitSigningOptions>;
     endpointOptionsMap: Record<string, Endpoints>;
     preferredSignTypeMap: Record<string, SignType>;
   }) => {
@@ -51,7 +51,7 @@ export type ChainWalletState = {
   account: WalletAccount;
 };
 
-export interface InterchainStore extends WalletManager {
+export interface TitanStore extends WalletManager {
   chainWalletState: ChainWalletState[];
   currentWalletName: string;
   currentChainName: string;
@@ -64,7 +64,7 @@ export interface InterchainStore extends WalletManager {
   setCurrentChainName: (chainName: string) => void;
   setCurrentWalletName: (walletName: string) => void;
   getDraftChainWalletState: (
-    state: InterchainStore,
+    state: TitanStore,
     walletName: string,
     chainName: string
   ) => ChainWalletState;
@@ -81,7 +81,7 @@ export interface InterchainStore extends WalletManager {
   getStatefulWalletByName: (walletName: string) => StatefulWallet | undefined;
 }
 
-export type InterchainStoreData = {
+export type TitanKitStoreData = {
   chains: Chain[];
   assetLists: AssetList[];
   wallets: StatefulWallet[];
@@ -89,10 +89,10 @@ export type InterchainStoreData = {
   endpointOptions: EndpointOptions;
 };
 
-export const createInterchainStore = (walletManager: WalletManager) => {
+export const createTitanKitStore = (walletManager: WalletManager) => {
   return createStore(
     persist(
-      immer<InterchainStore>((set, get) => ({
+      immer<TitanStore>((set, get) => ({
         chainWalletState: [],
         currentWalletName: '',
         currentChainName: '',
@@ -283,7 +283,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
         },
 
         getDraftChainWalletState: (
-          state: InterchainStore,
+          state: TitanStore,
           walletName: string,
           chainName: string
         ) => {
@@ -484,7 +484,7 @@ export const createInterchainStore = (walletManager: WalletManager) => {
         },
       })),
       {
-        name: 'interchain-kit-store',
+        name: 'titan-kit-store',
         storage: createJSONStorage(() => localStorage),
         partialize: (state) => ({
           chainWalletState: state.chainWalletState.map((cws) => ({
@@ -497,14 +497,14 @@ export const createInterchainStore = (walletManager: WalletManager) => {
           currentChainName: state.currentChainName,
         }),
         onRehydrateStorage: (state) => {
-          // console.log('interchain-kit store hydration starts')
+          // console.log('titan-kit store hydration starts')
 
           // optional
           return (state, error) => {
             if (error) {
               console.log('an error happened during hydration', error);
             } else {
-              // console.log('interchain-kit store hydration finished')
+              // console.log('titan-kit store hydration finished')
             }
           };
         },

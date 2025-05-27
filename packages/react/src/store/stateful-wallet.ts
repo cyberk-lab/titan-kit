@@ -11,22 +11,22 @@ import type {
   IGenericOfflineSigner,
 } from '@titanlabjs/types';
 
-import { InterchainStore } from './store';
+import { TitanStore } from './store';
 
 export class StatefulWallet extends BaseWallet {
   originalWallet: BaseWallet;
   walletName: string;
   walletSet: (arg: (draft: StatefulWallet) => void) => void;
   walletGet: () => StatefulWallet;
-  set: (arg: (draft: InterchainStore) => void) => void;
-  get: () => InterchainStore;
+  set: (arg: (draft: TitanStore) => void) => void;
+  get: () => TitanStore;
 
   constructor(
     wallet: BaseWallet,
     walletSet: (arg: (draft: StatefulWallet) => void) => void,
     walletGet: () => StatefulWallet,
-    set: (arg: (draft: InterchainStore) => void) => void,
-    get: () => InterchainStore
+    set: (arg: (draft: TitanStore) => void) => void,
+    get: () => TitanStore
   ) {
     super(wallet.info);
     this.originalWallet = wallet;

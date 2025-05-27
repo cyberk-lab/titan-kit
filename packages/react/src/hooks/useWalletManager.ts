@@ -1,9 +1,8 @@
-
 import { useStore } from 'zustand';
 
-import { useInterchainWalletContext } from '../provider';
+import { useTitanKitContext } from '../provider';
 
 export const useWalletManager = () => {
-  const store = useInterchainWalletContext();
+  const store = useTitanKitContext();
   return useStore(store);
 };

@@ -80,8 +80,8 @@ export class WCWallet extends BaseWallet {
       // optional parameters
       relayUrl: 'wss://relay.walletconnect.org',
       metadata: {
-        name: 'Example Dapp',
-        description: 'Example Dapp',
+        name: this.info.prettyName,
+        description: this.info.description,
         url: '#',
         icons: ['https://walletconnect.com/walletconnect-logo.png'],
       },
@@ -212,7 +212,7 @@ export class WCWallet extends BaseWallet {
     }
 
     const account = await this.getCosmosAccount(chainId);
-    console.log('account', account);
+
     return {
       address: account.address,
       algo: 'secp256k1',

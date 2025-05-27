@@ -1,18 +1,19 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
-import "./index.css";
-import "@interchain-ui/react/styles";
-import { BrowserRouter } from "react-router-dom";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
+import '@interchain-ui/react/styles';
+import { BrowserRouter } from 'react-router-dom';
 
-import { ChainProvider, InterchainWalletModal } from "@titan-kit/react";
+import { ChainProvider, InterchainWalletModal } from '@titan-kit/react';
 
-import { assetLists, chains } from "@chain-registry/v2";
-import { BaseWallet, ExtensionWallet, isInstanceOf } from "@titan-kit/core";
-import { keplrWallet } from "@titan-kit/keplr-extension";
+import { assetLists, chains } from '@chain-registry/v2';
+import { BaseWallet, ExtensionWallet, isInstanceOf } from '@titan-kit/core';
+import { keplrWallet } from '@titan-kit/keplr-extension';
+import { untitledWallet } from '@titan-kit/untitled-wallet';
 
 // import { MockWallet } from "@titan-kit/mock-wallet";
-import { ThemeProvider } from "@interchain-ui/react";
+import { ThemeProvider } from '@interchain-ui/react';
 
 const chainNames: string[] = [
   // "injectivetestnet",
@@ -25,7 +26,7 @@ const chainNames: string[] = [
   // "seitestnet2",
   // "ethereum",
   // "cosmoshubtestnet",
-  "titantestnet",
+  'titantestnet',
 ];
 // const chainNames = ["osmosistestnet"];
 // const chainNames = ["cosmoshub"];
@@ -151,9 +152,10 @@ const _wallets: BaseWallet[] = [
   // finWallet,
   // shellWallet,
   // ninjiWallet,
+  untitledWallet,
 ];
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ThemeProvider>
       <ChainProvider
@@ -161,41 +163,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         wallets={_wallets}
         assetLists={_assetLists}
         walletModal={InterchainWalletModal}
-        signerOptions={{
-          signing: (chainName) => {
-            return {
-              broadcast: {
-                checkTx: chainName === "osmosistestnet",
-                deliverTx: chainName === "osmosistestnet",
-                timeoutMs: chainName === "osmosistestnet" ? 20000 : 10000,
-              },
-              gasPrice:
-                chainName === "osmosistestnet" ? "0.025uosmo" : "0.025uatom",
-            };
-          },
-          preferredSignType: (chainName) => {
-            return chainName === "osmosistestnet" ? "direct" : "amino";
-          },
-        }}
-        endpointOptions={{
-          endpoints: {
-            // 'osmosis': {
-            //   rpc: ['http://localhost:26657'],
-            //   rest: ['http://localhost:1317']
-            // },
-            // 'cosmoshub': {
-            //   rpc: ['http://localhost:26653'],
-            //   rest: ['http://localhost:1313']
-            // }
-            // 'osmosistestnet': {
-            //   rpc: ['https://rpc.testnet.osmosis.zone'],
-            //   rest: ['https://lcd.testnet.osmosis.zone']
-            // }
-            // injectivetestnet: {
-            //   rpc: ["https://testnet.explorer.injective.network/"],
-            // },
-          },
-        }}
       >
         <BrowserRouter>
           <App />

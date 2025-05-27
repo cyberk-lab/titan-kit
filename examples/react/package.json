@@ -24,7 +24,8 @@
   "resolutions": {
     "@titan-kit/core": "file:../../packages/core",
     "@titan-kit/react": "file:../../packages/react",
-    "@titan-kit/keplr-extension": "file:../../wallets/keplr-extension"
+    "@titan-kit/keplr-extension": "file:../../wallets/keplr-extension",
+    "@titan-kit/untitled-wallet": "file:../../wallets/untitled-wallet"
   },
   "dependencies": {
     "@chain-registry/v2": "^1.71.16",
@@ -34,13 +35,14 @@
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@titan-kit/core": "file:../../packages/core",
     "@titan-kit/keplr-extension": "file:../../wallets/keplr-extension",
+    "@titan-kit/untitled-wallet": "file:../../wallets/untitled-wallet",
     "@titan-kit/react": "file:../../packages/react",
     "@interchain-ui/react": "^1.23.31",
     "@tanstack/react-query": "4",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.3",
     "ethers": "5.8.0",
-    "interchainjs": "^1.9.16",
+    "interchainjs": "1.9.15",
     "node-fetch": "^3.3.2",
     "postcss": "^8.4.47",
     "qrcode.react": "^3.1.0",
@@ -51,7 +53,14 @@
     "stream-browserify": "^3.0.0",
     "tailwindcss": "^3.4.13",
     "vite-plugin-fs": "^1.1.0",
-    "crypto-browserify": "3.12.1"
+    "crypto-browserify": "3.12.1",
+    "@interchainjs/ethereum": "1.9.15",
+    "@interchainjs/injective": "1.9.15",
+    "buffer": "6.0.3",
+    "@titanlabjs/cosmos": "0.2.7-alpha.0",
+    "@titanlabjs/cosmos-types": "0.2.7-alpha.0",
+    "@titanlabjs/titan-types": "0.2.7-alpha.0",
+    "@titanlabjs/types": "0.2.7-alpha.0"
   },
   "devDependencies": {
     "@starship-ci/cli": "^2.10.0",

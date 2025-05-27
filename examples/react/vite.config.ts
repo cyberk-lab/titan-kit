@@ -31,6 +31,7 @@ export default defineConfig({
       "node-fetch": "node-fetch/lib/index.js",
       stream: "stream-browserify",
       crypto: "crypto-browserify",
+      buffer: "buffer",
     },
   },
 });

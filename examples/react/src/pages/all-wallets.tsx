@@ -1,40 +1,24 @@
-import { assetLists, chains } from "@chain-registry/v2";
-import {
-  BaseWallet,
-  EthereumWallet,
-  isMobile,
-  MultiChainWallet,
-  WCWallet,
-} from "@titan-kit/core";
-import {
-  SigningClient,
-  useChainWallet,
-  useWalletManager,
-  useWalletModal,
-} from "@titan-kit/react";
-import { useEffect, useRef, useState } from "react";
-import { makeKeplrChainInfo } from "../utils";
-import { Chain, Asset, AssetList } from "@chain-registry/v2-types";
-import { coins } from "@cosmjs/amino";
-import { ChainInfo } from "@keplr-wallet/types";
-import { getBalance } from "interchainjs/cosmos/bank/v1beta1/query.rpc.func";
-import QRCode from "react-qr-code";
-import { send } from "interchainjs/cosmos/bank/v1beta1/tx.rpc.func";
-import { RpcClient } from "@interchainjs/cosmos/query/rpc";
-import { ethers } from "ethers";
-import { StatefulWallet } from "@titan-kit/react/store/stateful-wallet";
+import { BaseWallet, WCWallet } from '@titan-kit/core';
+import { useChainWallet, useWalletModal } from '@titan-kit/react';
+import { useWalletManager } from '@titan-kit/react';
+
+import { useEffect, useRef, useState } from 'react';
+import { Chain } from '@chain-registry/v2-types';
+import { getBalance } from '@titanlabjs/cosmos-types/cosmos/bank/v1beta1/query.rpc.func';
+import { MsgSend } from '@titanlabjs/cosmos-types/cosmos/bank/v1beta1/tx';
+import QRCode from 'react-qr-code';
+import { MessageComposer } from '@titanlabjs/titan-types/cosmos/bank/v1beta1/tx.registry';
 
 type BalanceProps = {
   address: string;
-  wallet: StatefulWallet;
+  wallet: BaseWallet;
   chainName: string;
   chainId: string;
   chain: Chain;
-  assetList: AssetList;
 };
 
-const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
-  const { rpcEndpoint } = useChainWallet(
+const BalanceTd = ({ address, wallet, chain }: BalanceProps) => {
+  const { rpcEndpoint, signingClient } = useChainWallet(
     chain.chainName,
     wallet.info?.name as string
   );
@@ -43,28 +27,12 @@ const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
   const [balance, setBalance] = useState<any>();
 
   const handleBalanceQuery = async () => {
-    let balance;
-
     setIsLoading(true);
-
-    if (chain.chainType === "cosmos") {
-      balance = await getBalance(rpcEndpoint as string, {
-        address,
-        denom:
-          (chain.staking?.stakingTokens[0].denom as string) ||
-          assetList.assets[0].base,
-      });
-    }
-    if (chain.chainType === "eip155") {
-      const provider = await wallet.getProvider(chain.chainId as string);
-      // provider = new ethers.providers.JsonRpcProvider(rpcEndpoint as string);
-
-      const ethProvider = new ethers.providers.Web3Provider(provider);
-      const result = await ethProvider.getBalance(address);
-
-      balance = { balance: { amount: result.toString() } };
-    }
-
+    const balance = await getBalance(rpcEndpoint as string, {
+      address,
+      denom: chain.staking?.stakingTokens[0].denom as string,
+    });
+    console.log(balance);
     setBalance(balance);
     setIsLoading(false);
   };
@@ -85,92 +53,66 @@ const BalanceTd = ({ address, wallet, chain, assetList }: BalanceProps) => {
 };
 
 type SendTokenProps = {
-  wallet: StatefulWallet;
+  wallet: BaseWallet;
   address: string;
   chain: Chain;
 };
+
 const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
-  const toAddressRef = useRef<HTMLInputElement>(null);
+  const ref = useRef<HTMLInputElement>(null);
   const amountRef = useRef<HTMLInputElement>(null);
 
-  const { assetList, signingClient, isSigningClientLoading, rpcEndpoint } =
-    useChainWallet(chain.chainName, wallet.info?.name as string);
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.value = 'titan1436453umjhme9mjt92krtwf0r07s7ql766hp6k';
+    }
+    if (amountRef.current) {
+      amountRef.current.value = (1e16).toString();
+    }
+  }, []);
 
-  if (
-    chain.chainType === "cosmos" &&
-    (isSigningClientLoading || !signingClient)
-  ) {
-    return <td>loading...</td>;
-  }
+  const { signingClient } = useChainWallet(
+    chain.chainName,
+    wallet.info?.name as string
+  );
 
   const handleSendToken = async () => {
-    if (!toAddressRef.current || !amountRef.current) {
-      return;
-    }
-
-    if (chain.chainType === "cosmos") {
-      const recipientAddress = toAddressRef.current.value;
-      const denom =
-        (chain.staking?.stakingTokens[0].denom as string) ||
-        assetList.assets[0].base;
+    if (ref.current) {
+      const recipientAddress = ref.current.value;
+      const denom = chain.staking?.stakingTokens[0].denom as string;
 
       const fee = {
-        amount: coins(25000, denom),
-        gas: "100000",
+        amount: [
+          {
+            amount: (BigInt(13) * BigInt(10) ** BigInt(15)).toString(),
+            denom,
+          },
+        ],
+        gas: '127496',
       };
 
       try {
-        const tx = await send(
-          signingClient as SigningClient,
+        signingClient!.addEncoders([MsgSend]);
+        const res = await signingClient!.signAndBroadcastSync(
           address,
-          {
-            fromAddress: address,
-            toAddress: recipientAddress,
-            amount: [
-              { denom: denom, amount: amountRef.current?.value as string },
-            ],
-          },
+          [
+            MessageComposer.fromPartial.send({
+              fromAddress: address!,
+              toAddress: recipientAddress,
+              amount: [
+                {
+                  denom,
+                  amount: amountRef.current?.value as string,
+                },
+              ],
+            }),
+          ],
           fee,
-          "test"
+          'test'
         );
-        console.log(tx);
+        console.log(res);
       } catch (error) {
         console.error(error);
-      }
-    }
-
-    if (chain.chainType === "eip155") {
-      const transaction = {
-        from: address,
-        to: toAddressRef.current.value,
-        value: `0x${parseInt(amountRef.current.value).toString(16)}`,
-        // data: "0x",
-      };
-
-      let provider;
-      if (wallet instanceof WCWallet) {
-        provider = wallet.getProvider();
-      }
-      if (wallet instanceof EthereumWallet) {
-        provider = wallet.getProvider(chain.chainId as string);
-      }
-      if (wallet instanceof MultiChainWallet) {
-        const ethWallet = wallet.getWalletByChainType("eip155");
-        provider = ethWallet.getProvider(chain.chainId as string);
-      }
-      provider = new ethers.providers.JsonRpcProvider(rpcEndpoint as string);
-      const ethProvider = new ethers.providers.Web3Provider(provider);
-      const signer = await ethProvider.getSigner();
-      try {
-        console.log(transaction);
-        // await wallet.switchChain(chain.chainId as string);
-        const tx = await signer.sendTransaction(transaction);
-        console.log(tx);
-        const txReceipt = await tx.wait();
-        console.log("Transaction hash:", txReceipt?.hash);
-        console.log(txResponse);
-      } catch (error) {
-        console.log(error);
       }
     }
   };
@@ -181,20 +123,17 @@ const SendTokenTd = ({ wallet, address, chain }: SendTokenProps) => {
         <button className="bg-blue-100 p-1 m-1" onClick={handleSendToken}>
           Send Token to:
         </button>
-        <input
-          className="border-red-300 border-2 rounded-sm"
-          ref={toAddressRef}
-        />
+        <input className="border-red-300 border-2 rounded-sm" ref={ref} />
       </div>
       <div>
-        amount:{" "}
+        amount:{' '}
         <input className="border-red-300 border-2 rounded-sm" ref={amountRef} />
       </div>
     </td>
   );
 };
 
-const RpcTd = ({ wallet, address, chain }: SendTokenProps) => {
+const RpcTd = ({ wallet, chain }: SendTokenProps) => {
   const { rpcEndpoint, getRpcEndpoint } = useChainWallet(
     chain.chainName,
     wallet.info?.name as string
@@ -213,32 +152,27 @@ const AddressTd = ({ wallet, chain }: SendTokenProps) => {
     chain.chainName,
     wallet.info?.name as string
   );
+
+  const getAccount = () => {
+    walletHandler.getAccount(chain.chainId as string).then((account) => {
+      console.log(account);
+    });
+  };
+
   return (
     <td>
       <p>{address}</p>
-      <button onClick={() => walletHandler.getAccount(chain.chainId as string)}>
-        get account
-      </button>
+      <button onClick={getAccount}>get account</button>
     </td>
   );
 };
 
-const ChainRow = ({
-  chain,
-  wallet,
-}: {
-  chain: Chain;
-  wallet: StatefulWallet;
-}) => {
-  const {
-    address,
-    rpcEndpoint,
-    connect,
-    disconnect,
-    status,
-    assetList,
-    message,
-  } = useChainWallet(chain.chainName, wallet.info?.name as string);
+const ChainRow = ({ chain, wallet }: { chain: Chain; wallet: BaseWallet }) => {
+  const { address, connect, disconnect, status } = useChainWallet(
+    chain.chainName,
+    wallet.info?.name as string
+  );
+
   return (
     <tr>
       <td>
@@ -247,9 +181,7 @@ const ChainRow = ({
       </td>
       <td>{chain.chainName}</td>
       <td>{chain.chainId}</td>
-      <td>
-        {status}:{message}
-      </td>
+      <td>{status}</td>
       <RpcTd address={address} wallet={wallet} chain={chain}></RpcTd>
       <AddressTd address={address} wallet={wallet} chain={chain}></AddressTd>
       <BalanceTd
@@ -258,28 +190,27 @@ const ChainRow = ({
         chainName={chain.chainName}
         wallet={wallet}
         chain={chain}
-        assetList={assetList}
       />
       <SendTokenTd address={address} wallet={wallet} chain={chain} />
     </tr>
   );
 };
 
-const WalletConnectTd = ({ wallet }: { wallet: StatefulWallet }) => {
+const WalletConnectTd = ({ wallet }: { wallet: BaseWallet }) => {
   const walletManager = useWalletManager();
 
-  const chainIds = walletManager.chains.map((c) => c.chainId);
+  // const chainIds = walletManager.chains.map((c) => c.chainId);
 
   const currentWallet = walletManager.wallets.find(
     (w: BaseWallet) => w.info?.name === wallet.info?.name
   );
 
   const connect = () => {
-    walletManager.connect(wallet.info?.name as string, "osmosis");
+    walletManager.connect(wallet.info?.name as string, 'titantestnet');
   };
 
   const disconnect = () => {
-    walletManager.disconnect(wallet.info?.name as string, "osmosis");
+    walletManager.disconnect(wallet.info?.name as string, 'titantestnet');
   };
 
   const uri = walletManager.walletConnectQRCodeUri;
@@ -302,45 +233,9 @@ const E2ETest = () => {
   const walletManager = useWalletManager();
   const { open } = useWalletModal();
 
-  // console.log(walletManager.wallets);
-
-  // useEffect(() => {
-  //   if (walletManager.isReady) {
-  //     walletManager.wallets.forEach((wallet) => {
-  //       console.log({ name: wallet.walletName, state: wallet.walletState });
-  //     });
-  //   }
-  // }, [walletManager.isReady]);
-
-  // walletManager.wallets.forEach((wallet) => {
-  //   console.log({ name: wallet.walletName, state: wallet.walletState });
-  // });
-
-  const addChain = async () => {
-    const keplrExtension = walletManager.wallets.find(
-      (w) => w.info?.name === "keplr-extension"
-    );
-
-    const chain = chains.find((c) => c.chainName === "cosmoshub");
-    const assetList = assetLists.find((a) => a.chainName === "cosmoshub");
-
-    const chainInfo: ChainInfo = makeKeplrChainInfo(
-      chain as Chain,
-      assetList?.assets[0] as Asset,
-      "http://localhost:26653",
-      "http://localhost:1313",
-      "test-cosmoshub-4",
-      "cosmoshub"
-    );
-
-    keplrExtension?.addSuggestChain(chainInfo);
-  };
-
-  const chainNameToAdd = "cosmoshubtestnet";
-
   return (
     <div>
-      <table style={{ width: "1000px" }}>
+      <table style={{ width: '1000px' }}>
         <thead>
           <tr>
             <th>Name</th>
@@ -390,33 +285,10 @@ const E2ETest = () => {
           })}
         </tbody>
       </table>
-      <button className="bg-blue-100 p-1 m-1" onClick={addChain}>
-        add suggest chain
-      </button>
+
       <button className="bg-blue-100 p-1 m-1" onClick={open}>
         open modal
       </button>
-      <button
-        className="bg-blue-100 p-1 m-1"
-        onClick={() => {
-          walletManager.addChains(
-            chains.filter((c) => c.chainName === chainNameToAdd),
-            assetLists.filter((a) => a.chainName === chainNameToAdd),
-            undefined,
-            {
-              endpoints: {
-                [chainNameToAdd]: {
-                  rpc: ["http://localhost:26657"],
-                },
-              },
-            }
-          );
-        }}
-      >
-        change rpc: {chainNameToAdd}
-      </button>
-      {JSON.stringify(isMobile())}
-      {navigator.userAgent}
     </div>
   );
 };

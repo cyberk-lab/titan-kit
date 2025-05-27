@@ -31,9 +31,6 @@
     "test:coverage": "jest --coverage --watch",
     "watch:dev": "tsc -w -p tsconfig.esm.json & tsc -w"
   },
-  "resolutions": {
-    "@titan-kit/core": "file:../../packages/core"
-  },
   "keywords": [],
   "dependencies": {
     "@chain-registry/v2-types": "^0.53.40",
@@ -42,7 +39,7 @@
     "@titanlabjs/cosmos-types": "0.2.7-alpha.0",
     "@titanlabjs/types": "0.2.7-alpha.0",
     "@react-icons/all-files": "^4.1.0",
-    "@titan-kit/core": "file:../../packages/core",
+    "@titan-kit/core": "^0.0.3-alpha.7",
     "@walletconnect/types": "^2.17.3",
     "zustand": "^5.0.3"
   },

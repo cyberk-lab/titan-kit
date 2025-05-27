@@ -19,9 +19,6 @@
   "bugs": {
     "url": "https://github.com/titan-kit/keplr-extension/issues"
   },
-  "resolutions": {
-    "@titan-kit/core": "file:../../packages/core"
-  },
   "scripts": {
     "copy": "copyfiles -f ../../LICENSE README.md package.json dist",
     "clean": "rimraf dist/**",
@@ -35,7 +32,7 @@
   "keywords": [],
   "dependencies": {
     "@keplr-wallet/provider-extension": "^0.12.102",
-    "@titan-kit/core": "file:../../packages/core"
+    "@titan-kit/core": "^0.0.3-alpha.7"
   },
   "gitHead": "35337e4470a0594ba644d31be8e24c8e295296f6"
 }

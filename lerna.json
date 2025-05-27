@@ -4,7 +4,7 @@
   "npmClient": "yarn",
   "npmClientArgs": ["--no-lockfile"],
   "packages": ["packages/*", "wallets/*", "examples/*"],
-  "version": "0.0.4-alpha.0",
+  "version": "0.0.4-alpha.1",
   "registry": "https://registry.npmjs.org",
   "command": {
     "create": {

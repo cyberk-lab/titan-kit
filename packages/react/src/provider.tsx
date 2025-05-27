@@ -11,7 +11,7 @@ import React, { ReactElement, useEffect, useRef } from 'react';
 import { createContext, useContext } from 'react';
 import { StoreApi } from 'zustand';
 
-import { ModalRenderer, WalletModalProps } from './modal';
+import { ModalRenderer, TitanKitModal, WalletModalProps } from './modal';
 import { createTitanKitStore, TitanStore } from './store';
 
 type TitanKitWalletContextType = StoreApi<TitanStore>;
@@ -23,7 +23,7 @@ type TitanKitWalletProviderProps = {
   signerOptions?: SignerOptions;
   endpointOptions?: EndpointOptions;
   children: React.ReactNode;
-  walletModal: (props: WalletModalProps) => ReactElement;
+  walletModal?: (props: WalletModalProps) => ReactElement;
   // wcMetadata?: UniversalProviderOpts['metadata'];
 };
 
@@ -36,7 +36,7 @@ export const TitanKitProvider = ({
   signerOptions,
   endpointOptions,
   children,
-  walletModal: ProviderWalletModal,
+  walletModal: ProviderWalletModal = TitanKitModal,
 }: TitanKitWalletProviderProps) => {
   // const [_, forceRender] = useState({});
 

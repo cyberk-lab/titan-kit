@@ -1,4 +1,15 @@
 import {
+  ConnectModal,
+  Wallet as InterchainUIWalletType,
+} from '@interchain-ui/react';
+import { DownloadInfo, WalletState } from '@titan-kit/core';
+import { ReactElement, useMemo, useState } from 'react';
+
+import { useWalletManager } from '../hooks';
+import { ChainWalletState } from '../store';
+import { StatefulWallet } from '../store/stateful-wallet';
+import { transferToWalletUISchema } from '../utils';
+import {
   ConnectedContent,
   ConnectedHeader,
   ConnectingContent,
@@ -13,19 +24,9 @@ import {
   RejectHeader,
   WalletListContent,
   WalletListHeader,
-} from "./views";
-import { ReactElement, useMemo, useState } from "react";
-import { BaseWallet, DownloadInfo, WalletState } from "@titan-kit/core";
-import {
-  ConnectModal,
-  Wallet as InterchainUIWalletType,
-} from "@interchain-ui/react";
-import { StatefulWallet } from "../store/stateful-wallet";
-import { useWalletManager } from "../hooks";
-import { transferToWalletUISchema } from "../utils";
-import { ChainWalletState } from "../store";
+} from './views';
 
-export type InterchainWalletModalProps = {
+export type TitanKitModalProps = {
   shouldShowList: boolean;
   isOpen: boolean;
   walletConnectQRCodeUri: string | null;
@@ -58,14 +59,14 @@ export type WalletModalProps = {
 };
 
 type ModalType =
-  | "wallet-list"
-  | "connecting"
-  | "connected"
-  | "reject"
-  | "not-exist"
-  | "qr-code";
+  | 'wallet-list'
+  | 'connecting'
+  | 'connected'
+  | 'reject'
+  | 'not-exist'
+  | 'qr-code';
 
-export const InterchainWalletModal = () => {
+export const TitanKitModal = () => {
   const [shouldShowList, setShouldShowList] = useState(false);
 
   const {
@@ -167,11 +168,11 @@ export const WalletModal = ({
   onReconnect,
   getDownloadLink,
   getEnv,
-}: InterchainWalletModalProps) => {
+}: TitanKitModalProps) => {
   const { header, content } = useMemo(() => {
     if (
       shouldShowList ||
-      (isDisconnected && currentWallet.errorMessage === "")
+      (isDisconnected && currentWallet.errorMessage === '')
     ) {
       return {
         header: <WalletListHeader close={close} />,
@@ -194,7 +195,7 @@ export const WalletModal = ({
     if (
       currentWallet &&
       walletConnectQRCodeUri &&
-      currentWallet.info.name === "WalletConnect"
+      currentWallet.info.name === 'WalletConnect'
     ) {
       return {
         header: (
@@ -298,8 +299,8 @@ export const ModalRenderer = ({
 }) => {
   if (!ProvidedWalletModal) {
     throw new Error(
-      `InterchainWalletProvider: walletModal is required. Please provide a wallet modal component. or use InterchainkitWalletModal/n
-      Example: <ChainProvider chains={chains} assetLists={assetLists} wallets={wallets} walletModal={InterchainKitWalletModal} />`
+      `TitanKitWalletProvider: walletModal is required. Please provide a wallet modal component. or use TitanKitWalletModal/n
+      Example: <TitanKitProvider chains={chains} assetLists={assetLists} wallets={wallets} walletModal={TitanKitWalletModal} />`
     );
   }
 

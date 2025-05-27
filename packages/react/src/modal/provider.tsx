@@ -1,10 +1,11 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { Wallet as InterchainUIWalletType } from '@interchain-ui/react';
+import { WalletState } from '@titan-kit/core';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 
-import { WalletState } from "@titan-kit/core";
-import { useChainWallet, useWalletManager } from "../hooks";
-import { Wallet as InterchainUIWalletType } from "@interchain-ui/react";
-import { transferToWalletUISchema } from "../utils";
-import { InterchainWalletModal } from "./modal";
+import { useChainWallet, useWalletManager } from '../hooks';
+import { StatefulWallet } from '../store/stateful-wallet';
+import { transferToWalletUISchema } from '../utils';
+import { TitanKitModal } from './modal';
 
 type WalletModalContextType = {
   modalIsOpen: boolean;
@@ -53,7 +54,7 @@ export const WalletModalProvider = ({
     setShouldShowList(false);
   };
 
-  const currentChainNameRef = useRef("");
+  const currentChainNameRef = useRef('');
 
   useEffect(() => {
     currentChainNameRef.current = currentChainName;
@@ -69,7 +70,7 @@ export const WalletModalProvider = ({
   return (
     <WalletModalContext.Provider value={{ modalIsOpen, open, close }}>
       {children}
-      <InterchainWalletModal
+      <TitanKitModal
         shouldShowList={shouldShowList}
         username={username}
         address={address}
@@ -86,7 +87,7 @@ export const WalletModalProvider = ({
         isDisconnected={status === WalletState.Disconnected}
         isNotExist={status === WalletState.NotExist}
         errorMessage={message}
-        onSelectWallet={(w) => handleConnectWallet(w.info.name)}
+        onSelectWallet={(w: StatefulWallet) => handleConnectWallet(w.info.name)}
         onBack={() => setShouldShowList(true)} // Add other required props with appropriate default or mock values
         onReconnect={() => handleConnectWallet(currentWalletName)}
         getDownloadLink={() => getDownloadLink(wallet?.info.name)}
@@ -99,7 +100,7 @@ export const WalletModalProvider = ({
 export const useWalletModal = () => {
   const context = useContext(WalletModalContext);
   if (!context) {
-    throw new Error("useWalletModal must be used within a WalletModalProvider");
+    throw new Error('useWalletModal must be used within a WalletModalProvider');
   }
   return context;
 };

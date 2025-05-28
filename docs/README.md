@@ -1,6 +1,7 @@
 # Introduction
 
-Titan Kit is an official Web3 wallet connection solution developed by Cyberk, based on [InterchainKit](https://github.com/hyperweb-io/interchain-kit), for [Titan Chain](https://titanlab.io/home). It provides a simple and user-friendly way to integrate Web3 wallet functionality into applications.
+Titan Kit is an official Web3 wallet connection solution developed by Cyberk, based on [InterchainKit](https://github.com/hyperweb-io/interchain-kit), for [Titan Chain](https://titanlab.io/home). It provides a simple and user-friendly way to integrate Web3 wallet functionality into applications.\
+Titan Kit provides all necessary tools for Titan chain.
 
 ## Overview
 

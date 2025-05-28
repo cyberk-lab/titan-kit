@@ -1,6 +1,0 @@
----
-icon: browsers
----
-
-# ui-customization
-

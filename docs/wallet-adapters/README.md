@@ -1,6 +1,0 @@
----
-icon: wallet
----
-
-# wallet-adapters
-

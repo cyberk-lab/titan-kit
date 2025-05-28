@@ -66,7 +66,7 @@ export class WalletManager {
     });
 
     // TODO: move this logic to somewhere else
-    ['titantestnet', 'titanmainnet'].forEach((chainName) => {
+    ['titantestnet', 'titan'].forEach((chainName) => {
       this.signerOptionMap[chainName] = {
         signerOptions: {
           parseAccount: (encodedAccount: EncodedMessage) => {

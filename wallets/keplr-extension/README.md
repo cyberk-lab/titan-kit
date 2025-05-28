@@ -1,68 +1,72 @@
-# @interchain-kit/keplr-extension
+# Keplr Extension
 
-<p align="center" width="100%">
-    <img height="90" src="https://user-images.githubusercontent.com/545047/190171432-5526db8f-9952-45ce-a745-bea4302f912b.svg" />
-</p>
+Keplr extension adapter for Titan Kit, providing seamless integration with Keplr wallet for Titan Chain applications. Keplr is one of the most popular wallets in the Cosmos ecosystem, offering a secure and user-friendly experience.
 
-<p align="center" width="100%">
-  <a href="https://github.com/hyperweb-io/cosmos-kit/actions/workflows/run-tests.yml">
-    <img height="20" src="https://github.com/hyperweb-io/cosmos-kit/actions/workflows/run-tests.yml/badge.svg" />
-  </a>
-  <a href="https://github.com/hyperweb-io/lib-count">
-    <img height="20" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fhyperweb-io%2Flib-count%2Fmain%2Foutput%2Fbadges%2Fproducts%2Fcosmos-kit%2Ftotal.json"/>  
-  </a>
-  <a href="https://github.com/hyperweb-io/lib-count">
-    <img height="20" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fhyperweb-io%2Flib-count%2Fmain%2Foutput%2Fbadges%2Fproducts%2Fcosmos-kit%2Fmonthly.json"/>  
-  </a>
-  <br />
-   <a href="https://github.com/hyperweb-io/cosmos-kit/blob/main/LICENSE"><img height="20" src="https://img.shields.io/badge/license-BSD%203--Clause%20Clear-blue.svg"></a>
-   <a href="https://www.npmjs.com/package/cosmos-kit"><img height="20" src="https://img.shields.io/github/package-json/v/hyperweb-io/cosmos-kit?filename=packages%2Fcosmos-kit%2Fpackage.json"></a>
-</p>
+## Installation
 
-## install
-
-```sh
-npm install @interchain-kit/keplr-extension
-```
-## Table of contents
-
-- [@interchain-kit/keplr-extension](#@interchain-kit/keplr-extension)
-  - [Install](#install)
-  - [Table of contents](#table-of-contents)
-- [Developing](#developing)
-- [Credits](#credits)
-
-## Developing
-
-When first cloning the repo:
-
-```
-yarn
-yarn build
+```bash
+npm install @titan-kit/keplr-extension
+# or
+yarn add @titan-kit/keplr-extension
 ```
 
-## Interchain JavaScript Stack 
+## Basic Usage
 
-A unified toolkit for building applications and smart contracts in the Interchain ecosystem ⚛️
+```typescript
+import { keplrWallet } from '@titan-kit/keplr-extension';
+import { TitanKitProvider } from '@titan-kit/react';
+import { assetLists, chains } from '@chain-registry/v2';
 
-| Category              | Tools                                                                                                                  | Description                                                                                           |
-|----------------------|------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
-| **Chain Information**   | [**Chain Registry**](https://github.com/hyperweb-io/chain-registry), [**Utils**](https://www.npmjs.com/package/@chain-registry/utils), [**Client**](https://www.npmjs.com/package/@chain-registry/client) | Everything from token symbols, logos, and IBC denominations for all assets you want to support in your application. |
-| **Wallet Connectors**| [**Interchain Kit**](https://github.com/hyperweb-io/interchain-kit)<sup>beta</sup>, [**Cosmos Kit**](https://github.com/hyperweb-io/cosmos-kit) | Experience the convenience of connecting with a variety of web3 wallets through a single, streamlined interface. |
-| **Signing Clients**          | [**InterchainJS**](https://github.com/hyperweb-io/interchainjs)<sup>beta</sup>, [**CosmJS**](https://github.com/cosmos/cosmjs) | A single, universal signing interface for any network |
-| **SDK Clients**              | [**Telescope**](https://github.com/hyperweb-io/telescope)                                                          | Your Frontend Companion for Building with TypeScript with Cosmos SDK Modules. |
-| **Starter Kits**     | [**Create Interchain App**](https://github.com/hyperweb-io/create-interchain-app)<sup>beta</sup>, [**Create Cosmos App**](https://github.com/hyperweb-io/create-cosmos-app) | Set up a modern Interchain app by running one command. |
-| **UI Kits**          | [**Interchain UI**](https://github.com/hyperweb-io/interchain-ui)                                                   | The Interchain Design System, empowering developers with a flexible, easy-to-use UI kit. |
-| **Testing Frameworks**          | [**Starship**](https://github.com/hyperweb-io/starship)                                                             | Unified Testing and Development for the Interchain. |
-| **TypeScript Smart Contracts** | [**Create Hyperweb App**](https://github.com/hyperweb-io/create-hyperweb-app)                              | Build and deploy full-stack blockchain applications with TypeScript |
-| **CosmWasm Contracts** | [**CosmWasm TS Codegen**](https://github.com/CosmWasm/ts-codegen)                                                   | Convert your CosmWasm smart contracts into dev-friendly TypeScript classes. |
+// Configure supported chains
+const chainNames = ['titantestnet'];
+const _chains = chains.filter(c => chainNames.includes(c.chainName));
+const _assetLists = assetLists.filter(a => chainNames.includes(a.chainName));
 
-## Credits
+// Use in TitanKitProvider
+function App() {
+  return (
+    <TitanKitProvider
+      chains={_chains}
+      wallets={[keplrWallet]}
+      assetLists={_assetLists}
+    >
+      <YourApp />
+    </TitanKitProvider>
+  );
+}
+```
 
-🛠 Built by Hyperweb (formerly Cosmology) — if you like our tools, please checkout and contribute to [our github ⚛️](https://github.com/hyperweb-io)
+## Features
 
-## Disclaimer
+- Seamless integration with Titan Kit
+- Support for Titan Chain
+- Native Keplr extension support
+- Compatible with other wallet adapters
 
-AS DESCRIBED IN THE LICENSES, THE SOFTWARE IS PROVIDED “AS IS”, AT YOUR OWN RISK, AND WITHOUT WARRANTIES OF ANY KIND.
+## Methods
 
-No developer or entity involved in creating this software will be liable for any claims or damages whatsoever associated with your use, inability to use, or your interaction with other users of the code, including any direct, indirect, incidental, special, exemplary, punitive or consequential damages, or loss of profits, cryptocurrencies, tokens, or anything else of value.
+The Keplr extension adapter implements the BaseWallet interface, providing the following methods:
+
+- `connect(chainId: string | string[])`: Connect to specified chain(s)
+- `disconnect(chainId: string | string[])`: Disconnect from specified chain(s)
+- `getAccount(chainId: string)`: Get account information
+- `getAccounts(chainIds: string[])`: Get accounts for multiple chains
+- `getOfflineSignerAmino(chainId: string)`: Get Amino signer
+- `getOfflineSignerDirect(chainId: string)`: Get Direct signer
+- `signAmino(chainId: string, signer: string, signDoc: StdSignDoc, signOptions?: SignOptions)`: Sign Amino messages
+- `signDirect(chainId: string, signer: string, signDoc: DirectSignDoc, signOptions?: SignOptions)`: Sign Direct messages
+
+## Best Practices
+
+1. Ensure Keplr extension is installed in the user's browser
+2. Handle connection errors appropriately
+3. Implement proper error handling for wallet operations
+4. Use with other wallet adapters for maximum compatibility
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+See LICENSE file for details.
